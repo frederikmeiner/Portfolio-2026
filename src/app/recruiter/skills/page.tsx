@@ -2,7 +2,7 @@ import SubPageLayout from "@/components/netflix/SubPageLayout";
 import SkillCard from "@/components/cards/SkillCard";
 import { getSkills } from "@/lib/sanity/queries";
 
-const categoryOrder = ["Frontend", "Backend", "Database", "DevOps", "Design", "Andet"];
+const categoryOrder = ["Frontend", "Backend", "CMS", "Database", "DevOps", "Design", "Andet"];
 
 export default async function RecruiterSkillsPage() {
   const skills = await getSkills();

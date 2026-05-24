@@ -15,6 +15,7 @@ export const project = defineType({
       type: "array",
       of: [{ type: "reference", to: [{ type: "skill" }] }],
     }),
+    defineField({ name: "videoUrl", title: "Video URL (mp4/webm)", type: "url" }),
     defineField({ name: "liveUrl", title: "Live URL", type: "url" }),
     defineField({ name: "githubUrl", title: "GitHub URL", type: "url" }),
     defineField({ name: "featured", title: "Fremhævet", type: "boolean", initialValue: false }),

@@ -16,6 +16,7 @@ export type Project = {
   description?: string;
   image?: { asset: { url: string }; hotspot?: object };
   technologies?: Skill[];
+  videoUrl?: string;
   liveUrl?: string;
   githubUrl?: string;
   featured?: boolean;
@@ -43,7 +44,7 @@ export async function getSkills(): Promise<Skill[]> {
 export async function getProjects(): Promise<Project[]> {
   return client.fetch(
     `*[_type == "project"] | order(publishedAt desc) {
-      _id, title, slug, description, featured, liveUrl, githubUrl, publishedAt,
+      _id, title, slug, description, featured, videoUrl, liveUrl, githubUrl, publishedAt,
       image { asset->{ url }, hotspot },
       technologies[]->{ _id, name, category }
     }`
@@ -56,6 +57,28 @@ export async function getFeaturedProjects(): Promise<Project[]> {
       _id, title, slug, description, liveUrl, githubUrl,
       image { asset->{ url }, hotspot },
       technologies[]->{ _id, name, category }
+    }`
+  );
+}
+
+export type InspirationItem = {
+  _id: string;
+  project: {
+    _id: string;
+    title: string;
+    description?: string;
+    image?: { asset: { url: string }; hotspot?: object };
+    videoUrl?: string;
+    liveUrl?: string;
+  };
+  size?: "normal" | "large" | "tall";
+};
+
+export async function getInspiration(): Promise<InspirationItem[]> {
+  return client.fetch(
+    `*[_type == "inspiration"] | order(orderRank asc) {
+      _id, size,
+      project->{ _id, title, description, videoUrl, liveUrl, image { asset->{ url } } }
     }`
   );
 }
