@@ -1,7 +1,26 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --yes)"
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --yes)",
+      "Bash(git push *)",
+      "Bash(git config *)",
+      "Bash(findstr user *)",
+      "Bash(gh auth *)",
+      "PowerShell(gh api *)",
+      "PowerShell(pip *)",
+      "PowerShell(uv *)",
+      "PowerShell(graphify install *)",
+      "Bash(npm install *)",
+      "Bash(node -e \"require\\('sanity'\\); console.log\\('sanity ok'\\)\")",
+      "Bash(node -e \"require\\('next-sanity'\\); console.log\\('next-sanity ok'\\)\")",
+      "WebFetch(domain:frederikmeiner.com)",
+      "Bash(npm show *)",
+      "WebFetch(domain:ui-ux-pro-max-skill.nextlevelbuilder.io)",
+      "PowerShell(npm install *)",
+      "WebFetch(domain:sumanthsamala.com)",
+      "Bash(npx tsc *)",
+      "PowerShell(cd \"C:\\\\Users\\\\frede\\\\Desktop\\\\portfolio\\\\portfolio-2026\" && \\(Get-ChildItem \".claude/skills\" -Recurse | Measure-Object -Property Length -Sum\\).Sum / 1MB)",
+      "Bash(git add *)"
     ]
   }
 }
