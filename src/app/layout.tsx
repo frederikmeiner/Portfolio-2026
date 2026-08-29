@@ -9,15 +9,15 @@ export const metadata: Metadata = {
 /**
  * Sætter temaet før browseren maler første frame, så man ikke ser et glimt
  * af det forkerte tema. Kører synkront — derfor inline og ikke en komponent.
+ *
+ * Mørkt er sidens identitet og dermed standard. Systemets prefers-color-scheme
+ * ignoreres med vilje — kun et aktivt valg i temaknappen giver lyst tema.
  */
 const themeScript = `
 (function () {
   try {
     var stored = localStorage.getItem("fm-theme");
-    var theme = stored === "light" || stored === "dark"
-      ? stored
-      : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
-    document.documentElement.dataset.theme = theme;
+    document.documentElement.dataset.theme = stored === "light" ? "light" : "dark";
   } catch (e) {
     document.documentElement.dataset.theme = "dark";
   }
