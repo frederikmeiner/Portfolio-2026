@@ -48,7 +48,7 @@ export default function HeroSection({ profileLabel, gifUrl = "https://media4.gip
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.7 }}
           className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-6"
-          style={{ fontFamily: "var(--font-heading)", color: "var(--foreground)" }}
+          style={{ fontFamily: "var(--font-heading)", color: "var(--on-media)" }}
         >
           Frederik
           <br />
@@ -60,7 +60,7 @@ export default function HeroSection({ profileLabel, gifUrl = "https://media4.gip
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.6 }}
           className="text-lg md:text-xl font-light max-w-xl mb-10 leading-relaxed"
-          style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}
+          style={{ color: "var(--on-media-muted)", fontFamily: "var(--font-body)" }}
         >
           Senior Frontend Developer. Jeg er vokset op med internettet og følger stadig med forrest – i dag bygger jeg WordPress-løsninger, integrationer og AI-agenter.
         </motion.p>
@@ -77,8 +77,8 @@ export default function HeroSection({ profileLabel, gifUrl = "https://media4.gip
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-6 py-3 rounded font-semibold text-sm transition-all duration-200 cursor-pointer"
             style={{
-              background: "var(--foreground)",
-              color: "var(--background)",
+              background: "var(--on-media)",
+              color: "var(--on-media-ink)",
               fontFamily: "var(--font-body)",
             }}
             onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = "0.85")}
@@ -93,13 +93,13 @@ export default function HeroSection({ profileLabel, gifUrl = "https://media4.gip
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-6 py-3 rounded font-semibold text-sm transition-all duration-200 cursor-pointer"
             style={{
-              background: "rgba(255,255,255,0.1)",
-              color: "var(--foreground)",
-              border: "1px solid rgba(255,255,255,0.15)",
+              background: "var(--on-media-tint)",
+              color: "var(--on-media)",
+              border: "1px solid var(--on-media-tint-strong)",
               fontFamily: "var(--font-body)",
             }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.18)")}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.1)")}
+            onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.background = "var(--on-media-tint-strong)")}
+            onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.background = "var(--on-media-tint)")}
           >
             <ExternalLink size={16} />
             LinkedIn

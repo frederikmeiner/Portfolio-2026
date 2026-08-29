@@ -16,9 +16,10 @@ export default defineConfig({
           .title("Indhold")
           .items([
             S.documentTypeListItem("skill").title("Skills"),
-            S.documentTypeListItem("project").title("Projekter"),
+            orderableDocumentListDeskItem({ type: "project", title: "Projekter", S, context: ctx }),
             S.documentTypeListItem("experience").title("Erfaringer"),
             orderableDocumentListDeskItem({ type: "inspiration", title: "Inspiration", S, context: ctx }),
+            orderableDocumentListDeskItem({ type: "wish", title: "Ønskeliste", S, context: ctx }),
           ]),
     }),
     visionTool(),

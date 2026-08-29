@@ -9,6 +9,24 @@ export type Skill = {
   order?: number;
 };
 
+/** Størrelse i bento-grid'et. Deles af project og inspiration. */
+export type BentoSize = "normal" | "large" | "tall";
+
+/**
+ * Fælles form for alt der vises i et bento-grid.
+ * Både projekter og inspiration normaliseres til denne type,
+ * så BentoCard/BentoGrid kun kender ét format.
+ */
+export type BentoItem = {
+  _id: string;
+  title: string;
+  description?: string;
+  image?: { asset: { url: string } };
+  videoUrl?: string;
+  liveUrl?: string;
+  size?: BentoSize;
+};
+
 export type Project = {
   _id: string;
   title: string;
@@ -20,6 +38,7 @@ export type Project = {
   liveUrl?: string;
   githubUrl?: string;
   featured?: boolean;
+  size?: BentoSize;
   publishedAt?: string;
 };
 
@@ -43,8 +62,8 @@ export async function getSkills(): Promise<Skill[]> {
 
 export async function getProjects(): Promise<Project[]> {
   return client.fetch(
-    `*[_type == "project"] | order(publishedAt desc) {
-      _id, title, slug, description, featured, videoUrl, liveUrl, githubUrl, publishedAt,
+    `*[_type == "project"] | order(orderRank asc) {
+      _id, title, slug, description, featured, size, videoUrl, liveUrl, githubUrl, publishedAt,
       image { asset->{ url }, hotspot },
       technologies[]->{ _id, name, category }
     }`
@@ -71,7 +90,7 @@ export type InspirationItem = {
     videoUrl?: string;
     liveUrl?: string;
   };
-  size?: "normal" | "large" | "tall";
+  size?: BentoSize;
 };
 
 export async function getInspiration(): Promise<InspirationItem[]> {
@@ -83,12 +102,80 @@ export async function getInspiration(): Promise<InspirationItem[]> {
   );
 }
 
+/** Projekter → bento. Falder tilbage til `featured` hvis `size` ikke er sat i Studio endnu. */
+export function projectsToBento(projects: Project[]): BentoItem[] {
+  return projects.map((p) => ({
+    _id: p._id,
+    title: p.title,
+    description: p.description,
+    image: p.image,
+    videoUrl: p.videoUrl,
+    liveUrl: p.liveUrl,
+    size: p.size ?? (p.featured ? "large" : "normal"),
+  }));
+}
+
+/** Inspiration → bento. */
+export function inspirationToBento(items: InspirationItem[]): BentoItem[] {
+  return items.map((item) => ({
+    _id: item._id,
+    title: item.project.title,
+    description: item.project.description,
+    image: item.project.image,
+    videoUrl: item.project.videoUrl,
+    liveUrl: item.project.liveUrl,
+    size: item.size,
+  }));
+}
+
 export async function getExperiences(): Promise<Experience[]> {
   return client.fetch(
     `*[_type == "experience"] | order(startDate desc) {
       _id, company, role, startDate, endDate, current, description,
       logo { asset->{ url } },
       technologies[]->{ _id, name, category }
+    }`
+  );
+}
+
+export type WishImage = {
+  asset: {
+    url: string;
+    metadata?: {
+      dimensions?: { aspectRatio?: number; width?: number; height?: number };
+      palette?: { dominant?: { background?: string } };
+    };
+  };
+};
+
+export type Wish = {
+  _id: string;
+  title: string;
+  image?: WishImage;
+  url?: string;
+  brand?: string;
+  color?: string;
+  /** Valgfri hex-kode — vises som farveprik ved farven. */
+  colorHex?: string;
+  size?: string;
+  length?: string;
+  /** Billedets kantfarve — bruges som flade bag produktfotoet. */
+  plateColor?: string;
+};
+
+export async function getWishlist(): Promise<Wish[]> {
+  return client.fetch(
+    `*[_type == "wish"] | order(orderRank asc) {
+      _id, title, url, brand, color, colorHex, size, length, plateColor,
+      image {
+        asset->{
+          url,
+          metadata {
+            dimensions { aspectRatio, width, height },
+            palette { dominant { background } }
+          }
+        }
+      }
     }`
   );
 }

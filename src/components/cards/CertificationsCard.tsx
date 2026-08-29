@@ -56,40 +56,40 @@ export default function CertificationsCard() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.85, y: 20 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="fixed z-50 flex flex-col items-center justify-center text-center rounded-2xl p-10"
-              style={{
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                background: "var(--surface-2)",
-                border: "1px solid var(--border)",
-                width: "min(90vw, 420px)",
-              }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
             >
-              <p
-                className="text-xl font-bold mb-2"
-                style={{ color: "var(--foreground)", fontFamily: "var(--font-heading)" }}
-              >
-                Certifikationer
-              </p>
-              <p
-                className="text-base"
-                style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}
-              >
-                Jeg har ikke nogle certifikationer... endnu 😅
-              </p>
-              <button
-                onClick={() => setOpen(false)}
-                className="mt-8 px-6 py-2 rounded-lg text-sm font-medium cursor-pointer"
+              <div
+                className="pointer-events-auto w-full max-w-[420px] max-h-[85vh] overflow-y-auto flex flex-col items-center justify-center text-center rounded-2xl p-6 sm:p-10"
                 style={{
-                  background: "var(--border)",
-                  color: "var(--foreground)",
-                  fontFamily: "var(--font-body)",
-                  border: "none",
+                  background: "var(--surface-2)",
+                  border: "1px solid var(--border)",
                 }}
               >
-                Luk
-              </button>
+                <p
+                  className="text-lg sm:text-xl font-bold mb-2"
+                  style={{ color: "var(--foreground)", fontFamily: "var(--font-heading)" }}
+                >
+                  Certifikationer
+                </p>
+                <p
+                  className="text-sm sm:text-base"
+                  style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}
+                >
+                  Jeg har ikke nogle certifikationer... endnu 😅
+                </p>
+                <button
+                  onClick={() => setOpen(false)}
+                  className="mt-6 sm:mt-8 px-6 py-2 rounded-lg text-sm font-medium cursor-pointer"
+                  style={{
+                    background: "var(--border)",
+                    color: "var(--foreground)",
+                    fontFamily: "var(--font-body)",
+                    border: "none",
+                  }}
+                >
+                  Luk
+                </button>
+              </div>
             </motion.div>
           </>
         )}

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -27,7 +28,7 @@ export default function SubPageLayout({ title, backHref, backLabel, children }: 
       <div
         className="fixed top-0 left-0 right-0 z-50 flex items-center gap-4 px-8 md:px-16 py-4 transition-all duration-300"
         style={{
-          background: scrolled ? "rgba(20,20,20,0.97)" : "transparent",
+          background: scrolled ? "var(--nav-scrolled)" : "transparent",
           backdropFilter: scrolled ? "blur(8px)" : "none",
         }}
       >
@@ -46,6 +47,10 @@ export default function SubPageLayout({ title, backHref, backLabel, children }: 
         >
           {title}
         </span>
+
+        <div className="ml-auto">
+          <ThemeToggle />
+        </div>
       </div>
 
       {/* Page content */}

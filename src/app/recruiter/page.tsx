@@ -6,7 +6,7 @@ import ContentRow from "@/components/netflix/ContentRow";
 import CategoryCard from "@/components/cards/CategoryCard";
 import CertificationsCard from "@/components/cards/CertificationsCard";
 import AnbefalingerCard from "@/components/cards/AnbefalingerCard";
-import { Zap, Rocket, Briefcase, Mail, Music, Lightbulb } from "lucide-react";
+import { Zap, Rocket, Briefcase, Mail, Music, Lightbulb, Gift } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type CardItem = {
@@ -33,7 +33,7 @@ const continueWatching: CardItem[] = [
 export default function RecruiterPage() {
   return (
     <div style={{ background: "var(--background)", minHeight: "100vh" }}>
-      <NetflixNav profileLabel="Rekrutterer" profileEmoji="🎯" />
+      <NetflixNav profileLabel="Rekrutterer" profileAvatar="/avatar-recruiter.png" />
       <HeroSection profileLabel="Rekrutterer" gifUrl="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExOTZ5eWwwbjRpdWM1amxyd3VueHhteTVzajVjeGZtZGJ1dDc4MXMyNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9dg/16u7Ifl2T4zYfQ932F/giphy.gif" />
 
       <div className="pt-8 pb-24">
@@ -64,6 +64,13 @@ export default function RecruiterPage() {
               <CategoryCard key={item.href} {...item} />
             ))}
             <CertificationsCard />
+            <CategoryCard
+              title="Ønskeliste"
+              description="Gear og ting jeg drømmer om"
+              href="/recruiter/wishlist"
+              gradient="linear-gradient(135deg, #831843 0%, #ec4899 100%)"
+              icon={Gift}
+            />
           </ContentRow>
         </div>
       </div>

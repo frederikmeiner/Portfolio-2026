@@ -48,7 +48,7 @@ export default function ContentRow({ title, children }: Props) {
           <button
             onClick={() => scroll("left")}
             className="absolute left-0 top-0 bottom-0 z-10 w-12 flex items-center justify-center cursor-pointer transition-opacity duration-200"
-            style={{ background: "linear-gradient(to right, rgba(20,20,20,0.9), transparent)" }}
+            style={{ background: "linear-gradient(to right, var(--row-fade), transparent)" }}
           >
             <ChevronLeft size={28} color="var(--foreground)" />
           </button>
@@ -69,7 +69,7 @@ export default function ContentRow({ title, children }: Props) {
           <button
             onClick={() => scroll("right")}
             className="absolute right-0 top-0 bottom-0 z-10 w-12 flex items-center justify-center cursor-pointer transition-opacity duration-200"
-            style={{ background: "linear-gradient(to left, rgba(20,20,20,0.9), transparent)" }}
+            style={{ background: "linear-gradient(to left, var(--row-fade), transparent)" }}
           >
             <ChevronRight size={28} color="var(--foreground)" />
           </button>

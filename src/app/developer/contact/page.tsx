@@ -41,7 +41,7 @@ export default function ContactPage() {
               style={{ boxShadow: "0 32px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.06)" }}
             >
               <Image
-                src="/Frederik.jpg"
+                src="/Frederik-portraet.jpg"
                 alt="Frederik Meiner"
                 fill
                 className="object-cover object-top transition-transform duration-700 group-hover:scale-105"

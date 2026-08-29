@@ -2,11 +2,12 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import Image from "next/image";
 import NetflixIntro from "@/components/netflix/NetflixIntro";
 
 const profiles = [
-  { id: "developer", label: "Udvikler", emoji: "💻", color: "#2563eb" },
-  { id: "recruiter", label: "Rekrutterer", emoji: "🎯", color: "#16a34a" },
+  { id: "developer", label: "Udvikler", avatar: "/avatar-developer.png", color: "#2563eb" },
+  { id: "recruiter", label: "Rekrutterer", avatar: "/avatar-recruiter.png", color: "#16a34a" },
 ];
 
 export default function ProfileSelector() {
@@ -69,7 +70,7 @@ export default function ProfileSelector() {
             <motion.div
               whileHover={{ scale: 1.06 }}
               whileTap={{ scale: 0.97 }}
-              className="w-32 h-32 md:w-40 md:h-40 rounded-lg flex items-center justify-center text-5xl md:text-6xl"
+              className="w-32 h-32 md:w-40 md:h-40 rounded-lg overflow-hidden"
               style={{
                 background: "var(--surface-2)",
                 border: `2px solid ${selected === profile.id ? profile.color : "transparent"}`,
@@ -84,7 +85,14 @@ export default function ProfileSelector() {
                   (e.currentTarget as HTMLDivElement).style.borderColor = "transparent";
               }}
             >
-              {profile.emoji}
+              <Image
+                src={profile.avatar}
+                alt={profile.label}
+                width={320}
+                height={320}
+                priority
+                className="w-full h-full object-cover"
+              />
             </motion.div>
             <span
               className="text-sm md:text-base font-medium"

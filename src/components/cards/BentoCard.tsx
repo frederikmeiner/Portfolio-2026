@@ -3,9 +3,10 @@
 import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import type { InspirationItem } from "@/lib/sanity/queries";
 
-type Props = { item: InspirationItem; index: number };
+import type { BentoItem } from "@/lib/sanity/queries";
+
+type Props = { item: BentoItem; index: number };
 
 const gradientPool = [
   "linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%)",
@@ -24,14 +25,24 @@ function getSpans(size?: string) {
   return { col: 1, row: 1 };
 }
 
-export default function InspirationBento({ item, index }: Props) {
-  const { project } = item;
+function getHostname(url?: string) {
+  if (!url) return null;
+  try {
+    return new URL(url).hostname.replace("www.", "");
+  } catch {
+    return null;
+  }
+}
+
+export default function BentoCard({ item, index }: Props) {
   const gradient = gradientPool[index % gradientPool.length];
   const { col, row } = getSpans(item.size);
   const isLarge = item.size === "large";
   const isBig = item.size === "large" || item.size === "tall";
-  const href = project.liveUrl;
-  const hostname = href ? new URL(href).hostname.replace("www.", "") : null;
+  const href = item.liveUrl;
+  const hostname = getHostname(href);
+
+  const imageUrl = item.image?.asset.url ?? null;
 
   const card = (
     <motion.div
@@ -46,19 +57,22 @@ export default function InspirationBento({ item, index }: Props) {
         variants={{ idle: { scale: 1 }, hovered: { scale: 1.07 } }}
         transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
       >
-        {project.videoUrl ? (
+        {item.videoUrl ? (
+          // Video vinder over billedet. Screenshottet bruges som poster,
+          // så kortet ikke står sort mens videoen loader.
           <video
-            src={project.videoUrl}
+            src={item.videoUrl}
+            poster={imageUrl ?? undefined}
             autoPlay
             muted
             loop
             playsInline
             className="w-full h-full object-cover"
           />
-        ) : project.image?.asset.url ? (
+        ) : imageUrl ? (
           <Image
-            src={project.image.asset.url}
-            alt={project.title}
+            src={imageUrl}
+            alt={item.title}
             fill
             className="object-cover"
             sizes="(max-width: 1024px) 50vw, 25vw"
@@ -79,7 +93,7 @@ export default function InspirationBento({ item, index }: Props) {
           className="font-bold text-white leading-tight"
           style={{ fontFamily: "var(--font-heading)", fontSize: isLarge ? "1.15rem" : "0.875rem" }}
         >
-          {project.title}
+          {item.title}
         </p>
       </motion.div>
 
@@ -100,10 +114,10 @@ export default function InspirationBento({ item, index }: Props) {
           variants={{ idle: { y: 8, opacity: 0 }, hovered: { y: 0, opacity: 1 } }}
           transition={{ duration: 0.28, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
         >
-          {project.title}
+          {item.title}
         </motion.p>
 
-        {project.description && (
+        {item.description && (
           <motion.p
             className="text-white/60 leading-relaxed"
             style={{
@@ -117,7 +131,7 @@ export default function InspirationBento({ item, index }: Props) {
             variants={{ idle: { y: 8, opacity: 0 }, hovered: { y: 0, opacity: 1 } }}
             transition={{ duration: 0.28, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            {project.description}
+            {item.description}
           </motion.p>
         )}
 

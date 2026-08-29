@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Lokale Claude Code-indstillinger (maskinspecifikke)
+.claude/settings.local.json
+
+# Python-cache fra skill-scripts
+__pycache__/
+*.pyc

@@ -6,7 +6,7 @@ import ContentRow from "@/components/netflix/ContentRow";
 import CategoryCard from "@/components/cards/CategoryCard";
 import CertificationsCard from "@/components/cards/CertificationsCard";
 import AnbefalingerCard from "@/components/cards/AnbefalingerCard";
-import { Zap, Rocket, Briefcase, Mail, Music, Lightbulb } from "lucide-react";
+import { Zap, Rocket, Briefcase, Mail, Music, Lightbulb, Gift } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type CardItem = {
@@ -33,7 +33,7 @@ const continueWatching: CardItem[] = [
 export default function DeveloperPage() {
   return (
     <div style={{ background: "var(--background)", minHeight: "100vh" }}>
-      <NetflixNav profileLabel="Udvikler" profileEmoji="💻" />
+      <NetflixNav profileLabel="Udvikler" profileAvatar="/avatar-developer.png" />
       <HeroSection profileLabel="Udvikler" />
 
       <div className="pt-8 pb-24">
@@ -64,6 +64,13 @@ export default function DeveloperPage() {
               <CategoryCard key={item.href} {...item} />
             ))}
             <CertificationsCard />
+            <CategoryCard
+              title="Ønskeliste"
+              description="Gear og ting jeg drømmer om"
+              href="/developer/wishlist"
+              gradient="linear-gradient(135deg, #831843 0%, #ec4899 100%)"
+              icon={Gift}
+            />
           </ContentRow>
         </div>
       </div>

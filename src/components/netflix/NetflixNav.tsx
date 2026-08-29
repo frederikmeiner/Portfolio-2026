@@ -1,21 +1,23 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const profiles = [
-  { id: "developer", label: "Udvikler",    emoji: "💻", href: "/developer" },
-  { id: "recruiter", label: "Rekrutterer", emoji: "🎯", href: "/recruiter" },
+  { id: "developer", label: "Udvikler",    avatar: "/avatar-developer.png", href: "/developer" },
+  { id: "recruiter", label: "Rekrutterer", avatar: "/avatar-recruiter.png", href: "/recruiter" },
 ];
 
 type Props = {
   profileLabel: string;
-  profileEmoji: string;
+  profileAvatar: string;
 };
 
-export default function NetflixNav({ profileLabel, profileEmoji }: Props) {
+export default function NetflixNav({ profileLabel, profileAvatar }: Props) {
   const [scrolled, setScrolled]   = useState(false);
   const [open, setOpen]           = useState(false);
   const dropdownRef               = useRef<HTMLDivElement>(null);
@@ -38,6 +40,11 @@ export default function NetflixNav({ profileLabel, profileEmoji }: Props) {
 
   const others = profiles.filter((p) => p.label !== profileLabel);
 
+  // Øverst ligger nav'en oven på hero-billedet og skal bruge lyse farver
+  // uanset tema; scrollet ligger den på sidens egen baggrund.
+  const ink = scrolled ? "var(--foreground)" : "var(--on-media)";
+  const inkMuted = scrolled ? "var(--muted)" : "var(--on-media-muted)";
+
   return (
     <motion.nav
       initial={{ opacity: 0, y: -20 }}
@@ -45,36 +52,43 @@ export default function NetflixNav({ profileLabel, profileEmoji }: Props) {
       transition={{ duration: 0.5 }}
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 md:px-16 py-4 transition-all duration-300"
       style={{
-        background: scrolled
-          ? "linear-gradient(to bottom, rgba(20,20,20,0.98) 0%, rgba(20,20,20,0.92) 100%)"
-          : "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%)",
+        background: scrolled ? "var(--nav-scrolled)" : "var(--nav-top)",
         backdropFilter: scrolled ? "blur(8px)" : "none",
       }}
     >
       <Link href="/">
         <span
           className="text-xl font-bold tracking-widest cursor-pointer"
-          style={{ fontFamily: "var(--font-heading)", color: "var(--foreground)" }}
+          style={{ fontFamily: "var(--font-heading)", color: ink, transition: "color 0.3s ease" }}
         >
           FM
         </span>
       </Link>
 
-      {/* Profile switcher */}
-      <div ref={dropdownRef} className="relative">
+      <div className="flex items-center gap-3">
+        <ThemeToggle />
+
+        {/* Profile switcher */}
+        <div ref={dropdownRef} className="relative">
         <button
           onClick={() => setOpen((v) => !v)}
-          className="flex items-center gap-2 cursor-pointer rounded-lg px-3 py-1.5 transition-colors duration-150 hover:bg-white/10"
+          className="flex items-center gap-2 cursor-pointer rounded-lg px-3 py-1.5 hover-tint"
           style={{ background: "none", border: "none" }}
         >
-          <span className="text-base">{profileEmoji}</span>
-          <span className="text-sm font-medium" style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}>
+          <Image
+            src={profileAvatar}
+            alt={profileLabel}
+            width={320}
+            height={320}
+            className="w-7 h-7 rounded object-cover"
+          />
+          <span className="text-sm font-medium" style={{ color: inkMuted, fontFamily: "var(--font-body)" }}>
             {profileLabel}
           </span>
           <motion.span
             animate={{ rotate: open ? 180 : 0 }}
             transition={{ duration: 0.2 }}
-            style={{ display: "flex", color: "var(--muted)" }}
+            style={{ display: "flex", color: inkMuted }}
           >
             <ChevronDown size={14} />
           </motion.span>
@@ -89,10 +103,10 @@ export default function NetflixNav({ profileLabel, profileEmoji }: Props) {
               transition={{ duration: 0.15, ease: "easeOut" }}
               className="absolute right-0 top-full mt-2 rounded-xl overflow-hidden"
               style={{
-                background: "rgba(28,28,28,0.97)",
+                background: "var(--surface-2)",
                 backdropFilter: "blur(16px)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                boxShadow: "0 16px 48px rgba(0,0,0,0.6)",
+                border: "1px solid var(--border)",
+                boxShadow: "var(--card-shadow)",
                 minWidth: 180,
               }}
             >
@@ -108,9 +122,15 @@ export default function NetflixNav({ profileLabel, profileEmoji }: Props) {
                     key={p.id}
                     href={p.href}
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150 hover:bg-white/10 cursor-pointer"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover-tint cursor-pointer"
                   >
-                    <span className="text-lg">{p.emoji}</span>
+                    <Image
+                      src={p.avatar}
+                      alt={p.label}
+                      width={320}
+                      height={320}
+                      className="w-8 h-8 rounded object-cover"
+                    />
                     <div>
                       <p
                         className="text-sm font-semibold leading-tight"
@@ -121,11 +141,11 @@ export default function NetflixNav({ profileLabel, profileEmoji }: Props) {
                     </div>
                   </Link>
                 ))}
-                <div className="my-2" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }} />
+                <div className="my-2" style={{ borderTop: "1px solid var(--border)" }} />
                 <Link
                   href="/"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150 hover:bg-white/10 cursor-pointer"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover-tint cursor-pointer"
                 >
                   <span className="text-sm" style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}>
                     ← Forsiden
@@ -135,6 +155,7 @@ export default function NetflixNav({ profileLabel, profileEmoji }: Props) {
             </motion.div>
           )}
         </AnimatePresence>
+        </div>
       </div>
     </motion.nav>
   );
