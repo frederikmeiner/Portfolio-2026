@@ -49,7 +49,10 @@ export type Experience = {
   startDate: string;
   endDate?: string;
   current?: boolean;
-  description?: Array<{ _type: string; children: Array<{ text: string }> }>;
+  /** "work" eller "education" — grupperer tidslinjen, så studier ikke ligner huller. */
+  kind?: "work" | "education";
+  description?: string;
+  highlights?: string[];
   logo?: { asset: { url: string } };
   technologies?: Skill[];
 };
@@ -62,7 +65,7 @@ export async function getSkills(): Promise<Skill[]> {
 
 export async function getProjects(): Promise<Project[]> {
   return client.fetch(
-    `*[_type == "project"] | order(orderRank asc) {
+    `*[_type == "project"] | order(featured desc, orderRank asc) {
       _id, title, slug, description, featured, size, videoUrl, liveUrl, githubUrl, publishedAt,
       image { asset->{ url }, hotspot },
       technologies[]->{ _id, name, category }
@@ -131,7 +134,7 @@ export function inspirationToBento(items: InspirationItem[]): BentoItem[] {
 export async function getExperiences(): Promise<Experience[]> {
   return client.fetch(
     `*[_type == "experience"] | order(startDate desc) {
-      _id, company, role, startDate, endDate, current, description,
+      _id, company, role, startDate, endDate, current, kind, description, highlights,
       logo { asset->{ url } },
       technologies[]->{ _id, name, category }
     }`
@@ -153,6 +156,8 @@ export type Wish = {
   title: string;
   image?: WishImage;
   url?: string;
+  /** Fri tekst, fx "650 kr." — indtastes manuelt og følger ikke butikkens pris. */
+  price?: string;
   brand?: string;
   color?: string;
   /** Valgfri hex-kode — vises som farveprik ved farven. */
@@ -166,7 +171,7 @@ export type Wish = {
 export async function getWishlist(): Promise<Wish[]> {
   return client.fetch(
     `*[_type == "wish"] | order(orderRank asc) {
-      _id, title, url, brand, color, colorHex, size, length, plateColor,
+      _id, title, url, price, brand, color, colorHex, size, length, plateColor,
       image {
         asset->{
           url,

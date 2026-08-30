@@ -1,13 +1,11 @@
-import SubPageLayout from "@/components/netflix/SubPageLayout";
-import BentoGrid from "@/components/cards/BentoGrid";
-import { getProjects, projectsToBento } from "@/lib/sanity/queries";
+import type { Metadata } from "next";
+import ProjectsPage from "@/components/pages/ProjectsPage";
 
-export default async function RecruiterProjectsPage() {
-  const items = projectsToBento(await getProjects());
+export const metadata: Metadata = {
+  title: "Projekter",
+  description: "Udvalgte projekter — web, integrationer og AI-agenter."
+};
 
-  return (
-    <SubPageLayout title="Projekter" backHref="/recruiter" backLabel="Rekrutterer">
-      <BentoGrid items={items} emptyText="Tilføj projekter i Sanity Studio → /studio" />
-    </SubPageLayout>
-  );
+export default function Page() {
+  return <ProjectsPage profile="recruiter" />;
 }

@@ -50,7 +50,7 @@ export default function NetflixNav({ profileLabel, profileAvatar }: Props) {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 md:px-16 py-4 transition-all duration-300"
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 md:px-16 py-4 transition-all duration-300"
       style={{
         background: scrolled ? "var(--nav-scrolled)" : "var(--nav-top)",
         backdropFilter: scrolled ? "blur(8px)" : "none",

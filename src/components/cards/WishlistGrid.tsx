@@ -391,6 +391,15 @@ export default function WishlistGrid({
                   {item.title}
                 </h3>
 
+                {item.price && (
+                  <p
+                    className="text-[1.05rem] font-semibold leading-none"
+                    style={{ color: "var(--foreground)", fontFamily: "var(--font-heading)" }}
+                  >
+                    {item.price}
+                  </p>
+                )}
+
                 {details.length > 0 && (
                   <div className="flex flex-wrap gap-1.5">
                     {details.map((d) => (

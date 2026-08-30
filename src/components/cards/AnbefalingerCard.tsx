@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import Modal from "@/components/ui/Modal";
 
 const gradient = "linear-gradient(135deg, #881337 0%, #f43f5e 100%)";
 const Star = () => (
@@ -16,13 +17,16 @@ export default function AnbefalingerCard() {
   return (
     <>
       <div className="flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
-        <motion.div
+        <motion.button
+          type="button"
           onClick={() => setOpen(true)}
+          aria-haspopup="dialog"
+          aria-expanded={open}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 0.2 }}
-          className="relative rounded-xl overflow-hidden cursor-pointer"
-          style={{ width: 264, height: 168 }}
+          className="relative rounded-xl overflow-hidden cursor-pointer text-left block"
+          style={{ width: 264, height: 168, padding: 0, border: "none", background: "none" }}
         >
           <div className="absolute inset-0" style={{ background: gradient }} />
           <div className="absolute -top-2 -right-2 select-none pointer-events-none">
@@ -47,65 +51,17 @@ export default function AnbefalingerCard() {
               Referencer fra samarbejdspartnere
             </p>
           </div>
-        </motion.div>
+        </motion.button>
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <>
-            <motion.div
-              key="backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setOpen(false)}
-              className="fixed inset-0 z-50"
-              style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)" }}
-            />
-            <motion.div
-              key="modal"
-              initial={{ opacity: 0, scale: 0.85, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.85, y: 20 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
-            >
-              <div
-                className="pointer-events-auto w-full max-w-[420px] max-h-[85vh] overflow-y-auto flex flex-col items-center justify-center text-center rounded-2xl p-6 sm:p-10"
-                style={{
-                  background: "var(--surface-2)",
-                  border: "1px solid var(--border)",
-                }}
-              >
-                <p
-                  className="text-lg sm:text-xl font-bold mb-2"
-                  style={{ color: "var(--foreground)", fontFamily: "var(--font-heading)" }}
-                >
-                  Anbefalinger
-                </p>
-                <p
-                  className="text-sm sm:text-base"
-                  style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}
-                >
-                  Alle jeg har arbejdet med er enige om, at jeg er fremragende. De er bare utilgængelige for kommentar.
-                </p>
-                <button
-                  onClick={() => setOpen(false)}
-                  className="mt-6 sm:mt-8 px-6 py-2 rounded-lg text-sm font-medium cursor-pointer"
-                  style={{
-                    background: "var(--border)",
-                    color: "var(--foreground)",
-                    fontFamily: "var(--font-body)",
-                    border: "none",
-                  }}
-                >
-                  Luk
-                </button>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      <Modal open={open} onClose={() => setOpen(false)} title="Anbefalinger">
+        <p
+          className="text-sm sm:text-base"
+          style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}
+        >
+          Alle jeg har arbejdet med er enige om, at jeg er fremragende. De er bare utilgængelige for kommentar.
+        </p>
+      </Modal>
     </>
   );
 }

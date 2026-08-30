@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export default function NetflixIntro({ onComplete }: { onComplete: () => void }) {
   const audioRef = useRef<HTMLAudioElement>(null);

@@ -27,6 +27,13 @@ export const wish = defineType({
       description: "Link til produktet eller webshoppen",
     }),
     defineField({
+      name: "price",
+      title: "Pris",
+      type: "string",
+      description:
+        "Fx 650 kr. Skrives manuelt og opdateres ikke automatisk — tjek den igen hvis butikken har ændret pris.",
+    }),
+    defineField({
       name: "plateColor",
       title: "Pladefarve",
       type: "string",

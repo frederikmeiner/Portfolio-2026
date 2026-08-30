@@ -1,24 +1,55 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import { ExternalLink, FileText } from "lucide-react";
+import { yearsOfExperience } from "@/lib/career";
 
 type Props = {
   profileLabel: string;
-  gifUrl?: string;
+  /**
+   * Basisnavn på baggrundsklippet i /public — uden filendelse. Der forventes
+   * en .webm, en .mp4 og en .jpg med samme navn.
+   */
+  media?: string;
 };
 
-export default function HeroSection({ profileLabel, gifUrl = "https://media4.giphy.com/media/huJmPXfeir5JlpPAx0/giphy.gif" }: Props) {
+export default function HeroSection({ profileLabel, media = "hero-developer" }: Props) {
+  const reduceMotion = useReducedMotion();
+  const years = yearsOfExperience();
+
   return (
     <section className="relative flex items-center overflow-hidden" style={{ height: "70vh" }}>
-      {/* GIF background */}
+      {/* Baggrundsklip. Lå før som en GIF hostet hos Giphy — nu selvhostet
+          video, hvilket både fjerner tredjepartsafhængigheden og skærer
+          filstørrelsen markant. Plakatbilledet males med det samme, så
+          heroen aldrig står tom mens klippet hentes. */}
       <div className="absolute inset-0">
-        <img
-          src={gifUrl}
-          alt=""
-          aria-hidden="true"
-          className="w-full h-full object-cover"
-        />
+        {reduceMotion ? (
+          <Image
+            src={`/${media}.jpg`}
+            alt=""
+            aria-hidden="true"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        ) : (
+          <video
+            key={media}
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster={`/${media}.jpg`}
+            aria-hidden="true"
+            className="w-full h-full object-cover"
+          >
+            <source src={`/${media}.webm`} type="video/webm" />
+            <source src={`/${media}.mp4`} type="video/mp4" />
+          </video>
+        )}
         {/* Dark overlay so text is readable */}
         <div
           className="absolute inset-0"
@@ -32,7 +63,7 @@ export default function HeroSection({ profileLabel, gifUrl = "https://media4.gip
       </div>
 
       {/* Content */}
-      <div className="relative z-10 px-8 md:px-16 lg:px-24 max-w-4xl">
+      <div className="relative z-10 px-5 md:px-16 lg:px-24 max-w-4xl">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -59,11 +90,36 @@ export default function HeroSection({ profileLabel, gifUrl = "https://media4.gip
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.6 }}
-          className="text-lg md:text-xl font-light max-w-xl mb-10 leading-relaxed"
+          className="text-lg md:text-xl font-light max-w-xl mb-6 leading-relaxed"
           style={{ color: "var(--on-media-muted)", fontFamily: "var(--font-body)" }}
         >
-          Senior Frontend Developer. Jeg er vokset op med internettet og følger stadig med forrest – i dag bygger jeg WordPress-løsninger, integrationer og AI-agenter.
+          Senior Frontend Developer hos Brand by Hand. Jeg bygger store sites og webshops
+          fra bunden — blandt andet for Danida, ICARS og Genan. For tiden mest i Next.js og
+          TypeScript med WordPress som headless CMS.
         </motion.p>
+
+        {/* Anciennitet og omfang står over folden. Stod de kun inde på
+            undersiderne, nåede en rekrutterer aldrig at se dem. */}
+        <motion.ul
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.6 }}
+          className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-10 text-sm font-medium"
+          style={{ color: "var(--on-media)", fontFamily: "var(--font-body)" }}
+        >
+          {[`${years}+ års erfaring`, "25+ leverede projekter", "Junior → Senior"].map(
+            (stat, i) => (
+              <li key={stat} className="flex items-center gap-5">
+                {i > 0 && (
+                  <span aria-hidden="true" style={{ color: "var(--on-media-muted)" }}>
+                    ·
+                  </span>
+                )}
+                {stat}
+              </li>
+            )
+          )}
+        </motion.ul>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

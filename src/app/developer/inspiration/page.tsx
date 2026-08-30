@@ -1,13 +1,11 @@
-import SubPageLayout from "@/components/netflix/SubPageLayout";
-import BentoGrid from "@/components/cards/BentoGrid";
-import { getInspiration, inspirationToBento } from "@/lib/sanity/queries";
+import type { Metadata } from "next";
+import InspirationPage from "@/components/pages/InspirationPage";
 
-export default async function InspirationPage() {
-  const items = inspirationToBento(await getInspiration());
+export const metadata: Metadata = {
+  title: "Inspiration",
+  description: "Det jeg følger med i og henter inspiration fra."
+};
 
-  return (
-    <SubPageLayout title="Inspiration" backHref="/developer" backLabel="Udvikler">
-      <BentoGrid items={items} emptyText="Tilføj inspiration i Sanity Studio → /studio" />
-    </SubPageLayout>
-  );
+export default function Page() {
+  return <InspirationPage profile="developer" />;
 }
