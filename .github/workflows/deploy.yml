@@ -31,8 +31,14 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p ~/.ssh
-          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/id_ed25519
+          # tr -d '\r': en nøgle kopieret fra Windows bærer CRLF med sig, og
+          # OpenSSH afviser den så som ugyldig.
+          printf '%s\n' "$VPS_SSH_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
+
+          # Viser om nøglen overlevede turen gennem secreten. Kun det offentlige
+          # aftryk logges — sammenlign med nøglen i serverens authorized_keys.
+          ssh-keygen -yf ~/.ssh/id_ed25519 | ssh-keygen -lf -
 
           # known_hosts kræver vært og nøgle på samme linje. GitHubs tekstfelt
           # ombryder lange værdier, så et linjeskift kan snige sig med ved
