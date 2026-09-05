@@ -1,0 +1,41 @@
+# Deployer til VPS'en ved push til main.
+#
+# Nøglen på serveren er låst til én forced command (se
+# /usr/local/sbin/deploy-portfolio-2026.sh), så dette workflow kan udelukkende
+# udløse et deploy af dette projekt — ikke få shell på maskinen. Derfor sendes
+# der bevidst ingen kommando med ssh herunder: serveren bestemmer selv hvad der
+# køres.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# To hurtige pushes deployer efter hinanden i stedet for at bygge oven i hinanden.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Deploy til VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          ssh -T -i ~/.ssh/id_ed25519 \
+              -o StrictHostKeyChecking=yes \
+              -o IdentitiesOnly=yes \
+              "$VPS_USER@$VPS_HOST" < /dev/null
