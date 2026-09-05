@@ -33,8 +33,18 @@ jobs:
           mkdir -p ~/.ssh
           printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+          # known_hosts kræver vært og nøgle på samme linje. GitHubs tekstfelt
+          # ombryder lange værdier, så et linjeskift kan snige sig med ved
+          # indsætning — her klemmes al whitespace ned til enkelte mellemrum,
+          # så formatet bliver gyldigt uanset hvordan secreten er tastet ind.
+          printf '%s' "$VPS_KNOWN_HOSTS" \
+            | tr '\r\n\t' '   ' \
+            | tr -s ' ' \
+            | sed 's/^ *//; s/ *$//' > ~/.ssh/known_hosts
+          printf '\n' >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
+
           ssh -T -i ~/.ssh/id_ed25519 \
               -o StrictHostKeyChecking=yes \
               -o IdentitiesOnly=yes \
