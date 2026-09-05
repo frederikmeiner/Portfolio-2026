@@ -6,7 +6,7 @@ import ContentRow from "@/components/netflix/ContentRow";
 import CategoryCard from "@/components/cards/CategoryCard";
 import CertificationsCard from "@/components/cards/CertificationsCard";
 import AnbefalingerCard from "@/components/cards/AnbefalingerCard";
-import { Zap, Rocket, Briefcase, Mail, Music, Lightbulb } from "lucide-react";
+import { Zap, Rocket, Briefcase, Mail, Music, Lightbulb, Gift } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type CardItem = {
@@ -64,6 +64,13 @@ export default function RecruiterPage() {
               <CategoryCard key={item.href} {...item} />
             ))}
             <CertificationsCard />
+            <CategoryCard
+              title="Ønskeliste"
+              description="Supabase, Google-login og RLS der skjuler reservationer for ejeren"
+              href="/recruiter/wishlist"
+              gradient="linear-gradient(135deg, #831843 0%, #ec4899 100%)"
+              icon={Gift}
+            />
           </ContentRow>
         </div>
       </div>
