@@ -21,6 +21,8 @@ Python til ui-ux-pro-max design system generator (Python ikke på PATH — brug 
 uv run python .claude/skills/ui-ux-pro-max/scripts/search.py "portfolio" --design-system -p "Navn" -f markdown
 ```
 
+Deploy sker ved push til `main` — GitHub Actions SSH'er til VPS'en og bygger. Se `DEPLOY.md`; deploy-trinnene ligger på serveren, ikke i repoet.
+
 ## Stack
 
 - **Next.js 16** (App Router, Turbopack, TypeScript)
