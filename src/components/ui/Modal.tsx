@@ -22,6 +22,15 @@ export default function Modal({ open, onClose, title, children }: Props) {
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
 
+  // Effekten nedenfor må kun køre når dialogen åbner/lukker — ikke hver gang
+  // forælderen sender en ny onClose-funktion (fx en inline arrow, der får ny
+  // identitet ved hvert tastetryk i en formular). Ellers flytter den fokus
+  // fra feltet til panelet for hvert bogstav.
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
+
   useEffect(() => {
     if (!open) return;
 
@@ -30,7 +39,7 @@ export default function Modal({ open, onClose, title, children }: Props) {
     panelRef.current?.focus();
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
     document.addEventListener("keydown", onKeyDown);
 
@@ -38,7 +47,7 @@ export default function Modal({ open, onClose, title, children }: Props) {
       document.removeEventListener("keydown", onKeyDown);
       opener?.focus();
     };
-  }, [open, onClose]);
+  }, [open]);
 
   return (
     <AnimatePresence>
