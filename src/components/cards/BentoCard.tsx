@@ -2,6 +2,7 @@
 
 import { ExternalLink } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 import type { BentoItem } from "@/lib/sanity/queries";
@@ -39,8 +40,12 @@ export default function BentoCard({ item, index }: Props) {
   const { col, row } = getSpans(item.size);
   const isLarge = item.size === "large";
   const isBig = item.size === "large" || item.size === "tall";
-  const href = item.liveUrl;
-  const hostname = getHostname(href);
+  // Internt link (titel-side) vinder over det eksterne. Hostname vises kun for
+  // eksterne — "danida.dk" nederst på et kort, der går til titel-siden, giver ingen mening.
+  const internal = item.href;
+  const external = internal ? undefined : item.liveUrl;
+  const href = internal ?? external;
+  const hostname = getHostname(external);
 
   const imageUrl = item.image?.asset.url ?? null;
 
@@ -162,18 +167,20 @@ export default function BentoCard({ item, index }: Props) {
     </motion.div>
   );
 
-  return href ? (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{ gridColumn: `span ${col}`, gridRow: `span ${row}`, display: "block" }}
-    >
+  const span = { gridColumn: `span ${col}`, gridRow: `span ${row}`, display: "block" } as const;
+
+  if (internal) {
+    return (
+      <Link href={internal} style={span}>
+        {card}
+      </Link>
+    );
+  }
+  return external ? (
+    <a href={external} target="_blank" rel="noopener noreferrer" style={span}>
       {card}
     </a>
   ) : (
-    <div style={{ gridColumn: `span ${col}`, gridRow: `span ${row}` }}>
-      {card}
-    </div>
+    <div style={span}>{card}</div>
   );
 }
