@@ -8,6 +8,13 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "i.scdn.co" },
     ],
   },
+  // Ønskelisten bor hos familie-profilen nu; gamle links skal stadig virke.
+  async redirects() {
+    return [
+      { source: "/recruiter/wishlist", destination: "/family/wishlist", permanent: true },
+      { source: "/developer/wishlist", destination: "/family/wishlist", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

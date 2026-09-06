@@ -28,5 +28,5 @@ export default async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/recruiter/wishlist", "/developer/wishlist", "/auth/:path*"],
+  matcher: ["/:profile/wishlist", "/auth/:path*"],
 };
