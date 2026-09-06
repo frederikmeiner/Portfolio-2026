@@ -2,6 +2,7 @@ import NetflixNav from "@/components/netflix/NetflixNav";
 import HeroSection from "@/components/netflix/HeroSection";
 import FamilyHero from "@/components/netflix/FamilyHero";
 import ContentRow from "@/components/netflix/ContentRow";
+import ContinueWatchingRow from "@/components/netflix/ContinueWatchingRow";
 import CategoryCard from "@/components/cards/CategoryCard";
 import AnbefalingerCard from "@/components/cards/AnbefalingerCard";
 import CertificationsCard from "@/components/cards/CertificationsCard";
@@ -55,8 +56,12 @@ export default function HomePage({ profile }: { profile: ProfileId }) {
       )}
 
       <div className="pt-8 pb-24">
-        {home.rows.map((row) => (
-          <Row key={row.title} row={row} profile={profile} />
+        {home.rows.map((row, i) => (
+          <div key={row.title}>
+            <Row row={row} profile={profile} />
+            {/* Besøgerens egen historik ligger lige under den første række, som på Netflix. */}
+            {i === 0 && <ContinueWatchingRow profile={profile} />}
+          </div>
         ))}
       </div>
     </div>
