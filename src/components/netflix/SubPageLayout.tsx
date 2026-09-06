@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
+import TrackVisit from "@/components/netflix/TrackVisit";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -14,10 +15,14 @@ type Props = {
   maxWidth?: string;
   /** Fuldbredde-hero over indholdet (titel-sider). Indholdet starter så uden top-padding. */
   hero?: React.ReactNode;
+  /** Navn i Continue Watching. Falder tilbage til `title`; sæt den når title er tom. */
+  trackTitle?: string;
+  /** Billede til kortet i Continue Watching (fx projektets). */
+  trackImage?: string;
   children: React.ReactNode;
 };
 
-export default function SubPageLayout({ title, backHref, backLabel, maxWidth, hero, children }: Props) {
+export default function SubPageLayout({ title, backHref, backLabel, maxWidth, hero, trackTitle, trackImage, children }: Props) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -28,6 +33,8 @@ export default function SubPageLayout({ title, backHref, backLabel, maxWidth, he
 
   return (
     <div style={{ background: "var(--background)", minHeight: "100vh" }}>
+      <TrackVisit title={trackTitle ?? title} image={trackImage} />
+
       {/* Nav */}
       <div
         className="fixed top-0 left-0 right-0 z-50 px-5 md:px-16 py-4 transition-all duration-300"

@@ -20,7 +20,7 @@ export default function ContactPage({ profile }: { profile: ProfileId }) {
   }
 
   return (
-    <SubPageLayout title="" backHref={href} backLabel={label}>
+    <SubPageLayout title="" backHref={href} backLabel={label} trackTitle="Kontakt">
       <div className="min-h-[80vh] flex items-center">
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center lg:items-start w-full max-w-5xl">
 
