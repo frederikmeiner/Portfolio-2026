@@ -1,9 +1,9 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import Image from "next/image";
+import { motion } from "framer-motion";
 import { ExternalLink, FileText } from "lucide-react";
 import { yearsOfExperience } from "@/lib/career";
+import HeroBackdrop from "@/components/netflix/HeroBackdrop";
 
 type Props = {
   profileLabel: string;
@@ -15,7 +15,6 @@ type Props = {
 };
 
 export default function HeroSection({ profileLabel, media = "hero-developer" }: Props) {
-  const reduceMotion = useReducedMotion();
   const years = yearsOfExperience();
 
   return (
@@ -24,43 +23,7 @@ export default function HeroSection({ profileLabel, media = "hero-developer" }: 
           video, hvilket både fjerner tredjepartsafhængigheden og skærer
           filstørrelsen markant. Plakatbilledet males med det samme, så
           heroen aldrig står tom mens klippet hentes. */}
-      <div className="absolute inset-0">
-        {reduceMotion ? (
-          <Image
-            src={`/${media}.jpg`}
-            alt=""
-            aria-hidden="true"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-        ) : (
-          <video
-            key={media}
-            autoPlay
-            loop
-            muted
-            playsInline
-            poster={`/${media}.jpg`}
-            aria-hidden="true"
-            className="w-full h-full object-cover"
-          >
-            <source src={`/${media}.webm`} type="video/webm" />
-            <source src={`/${media}.mp4`} type="video/mp4" />
-          </video>
-        )}
-        {/* Dark overlay so text is readable */}
-        <div
-          className="absolute inset-0"
-          style={{ background: "linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.1) 100%)" }}
-        />
-        {/* Bottom gradient fade into page */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-32"
-          style={{ background: "linear-gradient(to bottom, transparent, var(--background))" }}
-        />
-      </div>
+      <HeroBackdrop media={media} />
 
       {/* Content */}
       <div className="relative z-10 px-5 md:px-16 lg:px-24 max-w-4xl">
