@@ -4,11 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import Image from "next/image";
 import NetflixIntro from "@/components/netflix/NetflixIntro";
+import { PROFILES, PROFILE_IDS } from "@/lib/profiles";
 
-const profiles = [
-  { id: "developer", label: "Udvikler", avatar: "/avatar-developer.png", color: "#2563eb" },
-  { id: "recruiter", label: "Rekrutterer", avatar: "/avatar-recruiter.png", color: "#16a34a" },
-];
+const profiles = PROFILE_IDS.map((id) => ({ id, ...PROFILES[id] }));
 
 export default function ProfileSelector() {
   const [introComplete, setIntroComplete] = useState(false);
@@ -57,7 +55,7 @@ export default function ProfileSelector() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8, duration: 0.6 }}
-        className="flex gap-8 md:gap-16"
+        className="flex flex-wrap justify-center gap-8 md:gap-16"
       >
         {profiles.map((profile) => (
           <motion.button
