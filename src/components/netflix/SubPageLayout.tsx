@@ -12,10 +12,12 @@ type Props = {
   backLabel: string;
   /** Valgfri indholdsbredde, fx "1320px". Centrerer nav og indhold på samme akse. */
   maxWidth?: string;
+  /** Fuldbredde-hero over indholdet (titel-sider). Indholdet starter så uden top-padding. */
+  hero?: React.ReactNode;
   children: React.ReactNode;
 };
 
-export default function SubPageLayout({ title, backHref, backLabel, maxWidth, children }: Props) {
+export default function SubPageLayout({ title, backHref, backLabel, maxWidth, hero, children }: Props) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -57,20 +59,24 @@ export default function SubPageLayout({ title, backHref, backLabel, maxWidth, ch
         </div>
       </div>
 
+      {hero}
+
       {/* Page content */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="pt-24 pb-24 px-5 md:px-16"
+        className={`${hero ? "pt-6" : "pt-24"} pb-24 px-5 md:px-16`}
       >
         <div className="mx-auto w-full" style={{ maxWidth }}>
-          <h1
-            className="text-3xl md:text-5xl font-bold mb-10"
-            style={{ fontFamily: "var(--font-heading)", color: "var(--foreground)" }}
-          >
-            {title}
-          </h1>
+          {title && (
+            <h1
+              className="text-3xl md:text-5xl font-bold mb-10"
+              style={{ fontFamily: "var(--font-heading)", color: "var(--foreground)" }}
+            >
+              {title}
+            </h1>
+          )}
           {children}
         </div>
       </motion.div>
