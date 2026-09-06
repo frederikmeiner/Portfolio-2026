@@ -6,18 +6,12 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
+import { PROFILES, PROFILE_IDS, type ProfileId } from "@/lib/profiles";
 
-const profiles = [
-  { id: "developer", label: "Udvikler",    avatar: "/avatar-developer.png", href: "/developer" },
-  { id: "recruiter", label: "Rekrutterer", avatar: "/avatar-recruiter.png", href: "/recruiter" },
-];
+type Props = { profile: ProfileId };
 
-type Props = {
-  profileLabel: string;
-  profileAvatar: string;
-};
-
-export default function NetflixNav({ profileLabel, profileAvatar }: Props) {
+export default function NetflixNav({ profile }: Props) {
+  const { label: profileLabel, avatar: profileAvatar } = PROFILES[profile];
   const [scrolled, setScrolled]   = useState(false);
   const [open, setOpen]           = useState(false);
   const dropdownRef               = useRef<HTMLDivElement>(null);
@@ -38,7 +32,7 @@ export default function NetflixNav({ profileLabel, profileAvatar }: Props) {
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
-  const others = profiles.filter((p) => p.label !== profileLabel);
+  const others = PROFILE_IDS.filter((id) => id !== profile).map((id) => ({ id, ...PROFILES[id] }));
 
   // Øverst ligger nav'en oven på hero-billedet og skal bruge lyse farver
   // uanset tema; scrollet ligger den på sidens egen baggrund.
