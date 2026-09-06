@@ -24,6 +24,8 @@ export type BentoItem = {
   image?: { asset: { url: string } };
   videoUrl?: string;
   liveUrl?: string;
+  /** Internt link (titel-side). Sat → kortet linker hertil i stedet for liveUrl. */
+  href?: string;
   size?: BentoSize;
 };
 
@@ -83,6 +85,24 @@ export async function getFeaturedProjects(): Promise<Project[]> {
   );
 }
 
+export async function getProjectSlugs(): Promise<string[]> {
+  const rows = await client.fetch<{ slug: string }[]>(
+    `*[_type == "project" && defined(slug.current)]{ "slug": slug.current }`
+  );
+  return rows.map((r) => r.slug);
+}
+
+export async function getProject(slug: string): Promise<Project | null> {
+  return client.fetch(
+    `*[_type == "project" && slug.current == $slug][0] {
+      _id, title, slug, description, featured, size, videoUrl, liveUrl, githubUrl, publishedAt,
+      image { asset->{ url }, hotspot },
+      technologies[]->{ _id, name, category }
+    }`,
+    { slug }
+  );
+}
+
 export type InspirationItem = {
   _id: string;
   project: {
@@ -105,8 +125,12 @@ export async function getInspiration(): Promise<InspirationItem[]> {
   );
 }
 
-/** Projekter → bento. Falder tilbage til `featured` hvis `size` ikke er sat i Studio endnu. */
-export function projectsToBento(projects: Project[]): BentoItem[] {
+/**
+ * Projekter → bento. Med `basePath` linker kortene til titel-siden
+ * (`${basePath}/${slug}`) i stedet for direkte ud af sitet.
+ * Falder tilbage til `featured` hvis `size` ikke er sat i Studio endnu.
+ */
+export function projectsToBento(projects: Project[], basePath?: string): BentoItem[] {
   return projects.map((p) => ({
     _id: p._id,
     title: p.title,
@@ -114,6 +138,7 @@ export function projectsToBento(projects: Project[]): BentoItem[] {
     image: p.image,
     videoUrl: p.videoUrl,
     liveUrl: p.liveUrl,
+    href: basePath && p.slug?.current ? `${basePath}/${p.slug.current}` : undefined,
     size: p.size ?? (p.featured ? "large" : "normal"),
   }));
 }

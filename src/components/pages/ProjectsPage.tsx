@@ -4,8 +4,8 @@ import { getProjects, projectsToBento } from "@/lib/sanity/queries";
 import { PROFILES, type ProfileId } from "@/lib/profiles";
 
 export default async function ProjectsPage({ profile }: { profile: ProfileId }) {
-  const items = projectsToBento(await getProjects());
   const { href, label } = PROFILES[profile];
+  const items = projectsToBento(await getProjects(), `${href}/projects`);
 
   return (
     <SubPageLayout title="Projekter" backHref={href} backLabel={label}>
