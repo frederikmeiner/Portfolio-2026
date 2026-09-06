@@ -58,3 +58,21 @@ export async function getTopTracks(limit = 8) {
     }
   );
 }
+
+type TrackLike = { name: string; artists: { name: string }[] };
+
+/**
+ * Numre der aldrig skal vises på siden, uanset hvor meget de er spillet.
+ * Matcher på titel og kunstner uden hensyn til store/små bogstaver.
+ */
+const HIDDEN_TRACKS: { title: string; artist: string }[] = [
+  { title: "she forgot that i existed", artist: "Josiah MacCartney" },
+];
+
+const norm = (s: string) => s.trim().toLowerCase();
+
+export function isHiddenTrack(track: TrackLike) {
+  const title = norm(track.name);
+  const artists = track.artists.map((a) => norm(a.name));
+  return HIDDEN_TRACKS.some((h) => norm(h.title) === title && artists.includes(norm(h.artist)));
+}

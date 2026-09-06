@@ -1,13 +1,19 @@
-import { getTopTracks } from "@/lib/spotify";
+import { getTopTracks, isHiddenTrack } from "@/lib/spotify";
 
 export const revalidate = 3600;
 
+const LIMIT = 8;
+
 export async function GET() {
-  const res = await getTopTracks(8);
+  // Hent lidt flere end vi viser, så listen stadig er fuld efter bortfiltrering.
+  const res = await getTopTracks(LIMIT + 4);
   if (!res.ok) return Response.json({ tracks: [] });
   const data = await res.json();
 
-  const tracks = data.items?.map((track: {
+  const tracks = (data.items ?? [])
+    .filter((t: { name: string; artists: { name: string }[] }) => !isHiddenTrack(t))
+    .slice(0, LIMIT)
+    .map((track: {
     name: string;
     artists: { name: string }[];
     album: { name: string; images: { url: string }[] };
