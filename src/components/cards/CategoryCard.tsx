@@ -2,17 +2,19 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import type { LucideIcon } from "lucide-react";
+import { CARD_ICONS } from "@/lib/card-icons";
+import type { IconName } from "@/lib/profiles";
 
 type Props = {
   title: string;
   description?: string;
   href: string;
   gradient: string;
-  icon: LucideIcon;
+  icon: IconName;
 };
 
-export default function CategoryCard({ title, description, href, gradient, icon: Icon }: Props) {
+export default function CategoryCard({ title, description, href, gradient, icon }: Props) {
+  const Icon = CARD_ICONS[icon];
   return (
     <Link href={href} className="flex-shrink-0 cursor-pointer" style={{ scrollSnapAlign: "start" }}>
       <motion.div
