@@ -4,8 +4,9 @@ import { useState, useTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Gift, Check, LogOut, Undo2, ShieldCheck, Eye } from "lucide-react";
+import { ExternalLink, Gift, Check, LogOut, Undo2, ShieldCheck, Eye, Mail } from "lucide-react";
 import { getBrowserSupabase } from "@/lib/supabase/client";
+import EmailSignIn from "@/components/cards/EmailSignIn";
 import type { Wish } from "@/lib/sanity/queries";
 
 type WishlistUser = { id: string; name: string };
@@ -90,6 +91,7 @@ export default function WishlistGrid({
   const [mine, setMine] = useState(() => new Set(myIds));
   const [busyId, setBusyId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [emailOpen, setEmailOpen] = useState(false);
 
   const showReservations = authReady && Boolean(user);
   const takenCount = showReservations ? reserved.size : 0;
@@ -227,23 +229,39 @@ export default function WishlistGrid({
               </button>
             </div>
           ) : (
-            <button
-              onClick={signIn}
-              className="flex cursor-pointer items-center justify-center gap-2.5 rounded-full px-5 py-2.5 text-sm font-semibold transition-opacity duration-200 hover:opacity-90"
-              style={{
-                background: "#fff",
-                color: "#1f1f1f",
-                fontFamily: "var(--font-body)",
-                border: "1px solid rgba(0,0,0,0.08)",
-                flexShrink: 0,
-              }}
-            >
-              <GoogleMark />
-              Log ind
-            </button>
+            <div className="flex flex-wrap items-center gap-2" style={{ flexShrink: 0 }}>
+              <button
+                onClick={signIn}
+                className="flex cursor-pointer items-center justify-center gap-2.5 rounded-full px-5 py-2.5 text-sm font-semibold transition-opacity duration-200 hover:opacity-90"
+                style={{
+                  background: "#fff",
+                  color: "#1f1f1f",
+                  fontFamily: "var(--font-body)",
+                  border: "1px solid rgba(0,0,0,0.08)",
+                }}
+              >
+                <GoogleMark />
+                Log ind med Google
+              </button>
+              <button
+                onClick={() => setEmailOpen(true)}
+                className="flex cursor-pointer items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-opacity duration-200 hover:opacity-80"
+                style={{
+                  background: "var(--surface)",
+                  color: "var(--foreground)",
+                  fontFamily: "var(--font-body)",
+                  border: "1px solid var(--border)",
+                }}
+              >
+                <Mail size={15} />
+                Log ind med e-mail
+              </button>
+            </div>
           )}
         </div>
       )}
+
+      <EmailSignIn open={emailOpen} onClose={() => setEmailOpen(false)} />
 
       {showReservations && (
         <div className="mb-5 flex items-center gap-3">
