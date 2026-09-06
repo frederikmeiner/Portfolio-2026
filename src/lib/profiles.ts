@@ -53,11 +53,14 @@ const G = {
   pink: "linear-gradient(135deg, #831843 0%, #ec4899 100%)",
 } as const;
 
-/** Rækkerne er ens for de to arbejdsprofiler — kun overskriften nævner profilen. */
-function workHome(label: string): HomeConfig {
-  return {
-    hero: "work",
-    rows: [
+const ALL_PAGES: PageId[] = ["projects", "skills", "experience", "inspiration", "music", "contact", "wishlist"];
+
+/**
+ * Arbejdsrækkerne er ens for alle profiler — kun overskriften nævner profilen.
+ * Ønskelisten er med som case for dem, der ikke har den som forside.
+ */
+function workRows(label: string, withWishlistCase: boolean): RowSpec[] {
+  return [
       {
         title: `Today's Top Picks for ${label}`,
         cards: [
@@ -73,12 +76,17 @@ function workHome(label: string): HomeConfig {
         cards: [
           { title: "Musik", description: "Hvad der spiller lige nu", page: "music", gradient: G.spotify, icon: "music" },
           { title: "Inspiration", description: "Hvad der driver mig", page: "inspiration", gradient: G.purple, icon: "lightbulb" },
-          { title: "Ønskelisten — som case", description: "Supabase, RLS der skjuler reservationer for ejeren, login med Google eller engangskode", href: "/family/wishlist", gradient: G.pink, icon: "gift" },
+          ...(withWishlistCase
+            ? [{ title: "Ønskelisten — som case", description: "Supabase, RLS der skjuler reservationer for ejeren, login med Google eller engangskode", href: "/family/wishlist", gradient: G.pink, icon: "gift" } satisfies CardSpec]
+            : []),
         ],
         extras: ["certifications"],
       },
-    ],
-  };
+  ];
+}
+
+function workHome(label: string): HomeConfig {
+  return { hero: "work", rows: workRows(label, true) };
 }
 
 export const PROFILES: Record<ProfileId, Profile> = {
@@ -88,7 +96,7 @@ export const PROFILES: Record<ProfileId, Profile> = {
     avatar: "/avatar-developer.png",
     color: "#2563eb",
     heroMedia: "hero-developer",
-    pages: ["projects", "skills", "experience", "inspiration", "music", "contact"],
+    pages: ALL_PAGES.filter((p) => p !== "wishlist"),
     home: workHome("Udvikler"),
   },
   recruiter: {
@@ -97,7 +105,7 @@ export const PROFILES: Record<ProfileId, Profile> = {
     avatar: "/avatar-recruiter.png",
     color: "#16a34a",
     heroMedia: "hero-recruiter",
-    pages: ["projects", "skills", "experience", "inspiration", "music", "contact"],
+    pages: ALL_PAGES.filter((p) => p !== "wishlist"),
     home: workHome("Rekrutterer"),
   },
   family: {
@@ -107,7 +115,8 @@ export const PROFILES: Record<ProfileId, Profile> = {
     color: "#ec4899",
     // Genbruger rekrutterer-klippet indtil hero-family.{webm,mp4,jpg} ligger i /public.
     heroMedia: "hero-recruiter",
-    pages: ["wishlist", "music", "contact"],
+    // Samme sider som de andre — ønskelisten er bare forsiden og første række.
+    pages: ALL_PAGES,
     home: {
       hero: "wishlist",
       rows: [
@@ -119,6 +128,7 @@ export const PROFILES: Record<ProfileId, Profile> = {
             { title: "Kontakt", description: "Ring, skriv, kom forbi", page: "contact", gradient: G.sky, icon: "mail" },
           ],
         },
+        ...workRows("Familie & venner", false),
       ],
     },
   },

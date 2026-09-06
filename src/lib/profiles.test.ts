@@ -10,15 +10,15 @@ test("de tre profiler findes med uændrede href", () => {
   assert.equal(PROFILES.family.label, "Familie & venner");
 });
 
-test("family har kun det private", () => {
-  assert.deepEqual(PROFILES.family.pages, ["wishlist", "music", "contact"]);
-  assert.equal(hasPage("family", "projects"), false);
+test("family har alle sider — og ønskelisten øverst", () => {
+  for (const page of PROFILES.developer.pages) assert.ok(hasPage("family", page), `family mangler ${page}`);
   assert.equal(hasPage("family", "wishlist"), true);
+  assert.equal(PROFILES.family.home.rows[0].cards[0].title, "Ønskeliste");
 });
 
-test("ønskelisten findes kun hos family", () => {
+test("ønskelisten findes kun hos family; arbejdssiderne hos alle tre", () => {
   assert.deepEqual(profilesWithPage("wishlist"), ["family"]);
-  assert.deepEqual(profilesWithPage("projects"), ["developer", "recruiter"]);
+  assert.deepEqual(profilesWithPage("projects"), ["developer", "recruiter", "family"]);
 });
 
 test("isProfileId afviser ukendte", () => {
