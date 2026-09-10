@@ -14,7 +14,7 @@ gh run watch $(gh run list --workflow=Deploy --limit 1 --json databaseId -q '.[0
 
 Skal du deploye uden en ny commit — fx efter en ændring på serveren — så tryk **Run workflow** under Actions, eller `gh workflow run Deploy --ref main`.
 
-**Indhold kræver ikke deploy.** Ønsker, projekter, skills og erfaringer ligger i Sanity og er live i samme øjeblik de gemmes i Studio.
+**Indhold kræver ikke deploy.** Ønsker, projekter, skills og erfaringer ligger i Sanity og er live senest et minut efter de gemmes i Studio (siderne regenereres med `revalidate = 60` i `src/app/[profile]/layout.tsx`). Uden den værdi ville Next cache Sanity-svarene i `.next/cache` med et års levetid — og den mappe overlever deploys, så selv et nyt build viste gammelt indhold.
 
 ## Hvad der sker på serveren
 
