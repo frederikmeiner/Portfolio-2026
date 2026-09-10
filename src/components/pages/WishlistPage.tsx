@@ -11,6 +11,7 @@ export default async function WishlistPage({ profile }: { profile: ProfileId }) 
 
   let user: { id: string; name: string } | null = null;
   let isOwner = false;
+  let hideFromOwner = true;
   let reservedIds: string[] = [];
   let myIds: string[] = [];
 
@@ -28,13 +29,15 @@ export default async function WishlistPage({ profile }: { profile: ProfileId }) 
       };
 
       // Databasen afgør hvad der udleveres — inklusive om ejeren skal skånes.
-      const [{ data: owner }, { data: taken }, { data: mine }] = await Promise.all([
+      const [{ data: owner }, { data: hide }, { data: taken }, { data: mine }] = await Promise.all([
         supabase.rpc("is_wishlist_owner"),
+        supabase.rpc("wishlist_hide_from_owner"),
         supabase.rpc("reserved_wish_ids"),
         supabase.from("reservations").select("wish_id"),
       ]);
 
       isOwner = owner === true;
+      hideFromOwner = hide !== false;
       reservedIds = (taken as string[] | null) ?? [];
       myIds = (mine ?? []).map((r: { wish_id: string }) => r.wish_id);
     }
@@ -47,6 +50,7 @@ export default async function WishlistPage({ profile }: { profile: ProfileId }) 
         authReady={authReady}
         user={user}
         isOwner={isOwner}
+        hideFromOwner={hideFromOwner}
         reservedIds={reservedIds}
         myIds={myIds}
       />

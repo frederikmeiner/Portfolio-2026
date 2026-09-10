@@ -18,6 +18,8 @@ type Props = {
   user?: WishlistUser | null;
   /** Ejeren ser aldrig reservationer — hverken hvilke eller af hvem. */
   isOwner?: boolean;
+  /** Databasens toggle. Kun når den er slået FRA får ejeren en advarsel. */
+  hideFromOwner?: boolean;
   reservedIds?: string[];
   myIds?: string[];
 };
@@ -82,6 +84,7 @@ export default function WishlistGrid({
   authReady = false,
   user = null,
   isOwner = false,
+  hideFromOwner = true,
   reservedIds = [],
   myIds = [],
 }: Props) {
@@ -90,6 +93,7 @@ export default function WishlistGrid({
   const [reserved, setReserved] = useState(() => new Set(reservedIds));
   const [mine, setMine] = useState(() => new Set(myIds));
   const [busyId, setBusyId] = useState<string | null>(null);
+  const ownerCanSee = isOwner && !hideFromOwner;
   const [message, setMessage] = useState<string | null>(null);
   const [emailOpen, setEmailOpen] = useState(false);
 
@@ -177,7 +181,7 @@ export default function WishlistGrid({
           className="mb-7 flex flex-col gap-4 rounded-2xl px-5 py-4 sm:flex-row sm:items-center sm:gap-5"
           style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}
         >
-          {isOwner ? (
+          {ownerCanSee ? (
             <Eye size={16} style={{ color: "#facc15", flexShrink: 0 }} />
           ) : (
             <ShieldCheck size={16} style={{ color: "var(--accent)", flexShrink: 0 }} />
@@ -187,7 +191,7 @@ export default function WishlistGrid({
             className="flex-1 text-[0.84rem] leading-relaxed"
             style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}
           >
-            {isOwner ? (
+            {ownerCanSee ? (
               <>
                 <span style={{ color: "var(--foreground)", fontWeight: 600 }}>
                   Skjul for ejer er slået fra.
