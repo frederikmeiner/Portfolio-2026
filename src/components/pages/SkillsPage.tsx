@@ -16,7 +16,7 @@ export default async function SkillsPage({ profile }: { profile: ProfileId }) {
   }, {});
 
   return (
-    <SubPageLayout title="Skills" backHref={href} backLabel={label}>
+    <SubPageLayout title="Kompetencer" backHref={href} backLabel={label}>
       <div className="flex flex-col gap-12">
         {Object.entries(grouped).map(([category, items]) => (
           <div key={category}>

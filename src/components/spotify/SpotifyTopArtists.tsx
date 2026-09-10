@@ -30,7 +30,7 @@ export default function SpotifyTopArtists() {
         className="text-xs font-semibold uppercase tracking-widest mb-4"
         style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}
       >
-        Top artister denne måned
+        Mest spillede kunstnere denne måned
       </p>
 
       <div className="flex flex-col gap-2">

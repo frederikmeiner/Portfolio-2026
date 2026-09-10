@@ -62,9 +62,9 @@ const ALL_PAGES: PageId[] = ["projects", "skills", "experience", "inspiration", 
 function workRows(label: string, withWishlistCase: boolean): RowSpec[] {
   return [
       {
-        title: `Today's Top Picks for ${label}`,
+        title: `Dagens topvalg til ${label}`,
         cards: [
-          { title: "Skills", description: "Next.js, TypeScript, React, WordPress & mere", page: "skills", gradient: G.blue, icon: "zap" },
+          { title: "Kompetencer", description: "Next.js, TypeScript, React, WordPress & mere", page: "skills", gradient: G.blue, icon: "zap" },
           { title: "Projekter", description: "25+ stykker — Danida, ICARS, Genan", page: "projects", gradient: G.green, icon: "rocket" },
           { title: "Erfaring", description: "Fra studiejob til senior, samme sted", page: "experience", gradient: G.amber, icon: "briefcase" },
           { title: "Kontakt", description: "Skriv endelig", page: "contact", gradient: G.sky, icon: "mail" },

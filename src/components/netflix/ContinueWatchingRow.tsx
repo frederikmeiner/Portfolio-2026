@@ -101,7 +101,7 @@ export default function ContinueWatchingRow({ profile }: { profile: ProfileId })
         className="px-5 md:px-16 mb-6 text-xs font-semibold uppercase tracking-widest"
         style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}
       >
-        Continue Watching for {PROFILES[profile].label}
+        Fortsæt hvor du slap
       </h2>
       <ContentRow title="">
         {entries.map((entry) => (

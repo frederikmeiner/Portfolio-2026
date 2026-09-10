@@ -34,7 +34,7 @@ export default function HeroSection({ profileLabel, media = "hero-developer" }: 
           className="text-sm font-semibold uppercase tracking-widest mb-4"
           style={{ color: "var(--accent)", fontFamily: "var(--font-body)" }}
         >
-          {profileLabel} View
+          {profileLabel}-profil
         </motion.p>
 
         <motion.h1
@@ -56,7 +56,7 @@ export default function HeroSection({ profileLabel, media = "hero-developer" }: 
           className="text-lg md:text-xl font-light max-w-xl mb-6 leading-relaxed"
           style={{ color: "var(--on-media-muted)", fontFamily: "var(--font-body)" }}
         >
-          Senior Frontend Developer hos Brand by Hand. Jeg bygger store sites og webshops
+          Senior frontend-udvikler hos Brand by Hand. Jeg bygger store sites og webshops
           fra bunden — blandt andet for Danida, ICARS og Genan. For tiden mest i Next.js og
           TypeScript med WordPress som headless CMS.
         </motion.p>
@@ -104,7 +104,7 @@ export default function HeroSection({ profileLabel, media = "hero-developer" }: 
             onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = "1")}
           >
             <FileText size={16} />
-            Resume
+            CV
           </a>
           <a
             href="https://linkedin.com/in/frederikmeiner"

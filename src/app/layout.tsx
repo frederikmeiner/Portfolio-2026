@@ -27,25 +27,25 @@ const SITE_URL = "https://frederikmeiner.com";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Frederik Meiner — Senior Frontend Developer",
+    default: "Frederik Meiner — Senior frontend-udvikler",
     // Undersiderne sætter kun deres eget navn; resten lægges på her.
     template: "%s — Frederik Meiner",
   },
   description:
-    "Portfolio for Frederik Meiner, senior frontend developer. Projekter, erfaring og kompetencer præsenteret som en Netflix-profil.",
+    "Portfolio for Frederik Meiner, senior frontend-udvikler. Projekter, erfaring og kompetencer præsenteret som en Netflix-profil.",
   openGraph: {
     type: "website",
     locale: "da_DK",
     siteName: "Frederik Meiner",
     url: SITE_URL,
-    title: "Frederik Meiner — Senior Frontend Developer",
+    title: "Frederik Meiner — Senior frontend-udvikler",
     description:
-      "Portfolio for Frederik Meiner, senior frontend developer. Projekter, erfaring og kompetencer præsenteret som en Netflix-profil.",
+      "Portfolio for Frederik Meiner, senior frontend-udvikler. Projekter, erfaring og kompetencer præsenteret som en Netflix-profil.",
     images: [{ url: "/Frederik-portraet.jpg", width: 1200, height: 630, alt: "Frederik Meiner" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Frederik Meiner — Senior Frontend Developer",
+    title: "Frederik Meiner — Senior frontend-udvikler",
     description: "Projekter, erfaring og kompetencer præsenteret som en Netflix-profil.",
     images: ["/Frederik-portraet.jpg"],
   },

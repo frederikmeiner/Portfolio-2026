@@ -3,7 +3,7 @@ import SkillsPage from "@/components/pages/SkillsPage";
 import { profilesWithPage, type ProfileId } from "@/lib/profiles";
 
 export const metadata: Metadata = {
-  title: "Skills",
+  title: "Kompetencer",
   description: "Teknologier og værktøjer jeg arbejder i til daglig.",
 };
 

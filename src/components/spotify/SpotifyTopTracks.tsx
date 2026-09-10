@@ -38,7 +38,7 @@ export default function SpotifyTopTracks() {
         className="text-xs font-semibold uppercase tracking-widest mb-4"
         style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}
       >
-        Top tracks denne måned
+        Mest spillede numre denne måned
       </p>
 
       <div className="flex flex-col gap-2">
