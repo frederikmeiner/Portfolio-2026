@@ -67,6 +67,7 @@ type TrackLike = { name: string; artists: { name: string }[] };
  */
 const HIDDEN_TRACKS: { title: string; artist: string }[] = [
   { title: "she forgot that i existed", artist: "Josiah MacCartney" },
+  { title: "tell u i'm sorry", artist: "Seon" },
 ];
 
 const norm = (s: string) => s.trim().toLowerCase();
