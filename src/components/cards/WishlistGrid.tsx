@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Gift, Check, LogOut, Undo2, ShieldCheck, Eye, Mail } from "lucide-react";
+import { ExternalLink, Gift, Check, LogOut, Undo2, ShieldCheck, Eye, Mail, Tag, Copy } from "lucide-react";
 import { getBrowserSupabase } from "@/lib/supabase/client";
 import EmailSignIn from "@/components/cards/EmailSignIn";
 import type { Wish } from "@/lib/sanity/queries";
@@ -48,12 +48,12 @@ function getDetails(item: Wish): Detail[] {
 function DetailChip({ detail }: { detail: Detail }) {
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[0.7rem] leading-none"
+      className="inline-flex items-baseline gap-1.5 rounded-md px-2 py-1 text-[0.7rem] leading-none"
       style={{ background: "var(--surface)", fontFamily: "var(--font-body)" }}
     >
       {detail.color && (
         <span
-          className="h-2 w-2 rounded-full"
+          className="h-2 w-2 self-center rounded-full"
           style={{ background: detail.color, boxShadow: "inset 0 0 0 1px rgba(128,128,128,0.4)" }}
         />
       )}
@@ -65,6 +65,41 @@ function DetailChip({ detail }: { detail: Detail }) {
       </span>
       <span style={{ color: "var(--foreground)", fontWeight: 600 }}>{detail.value}</span>
     </span>
+  );
+}
+
+/** Rabatkode-label øverst på kortet — klik kopierer koden til udklipsholderen. */
+function DiscountBadge({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      // Ældre browsere uden clipboard-API — koden står stadig synligt på labelen.
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      title="Kopiér rabatkoden"
+      aria-label={`Rabatkode ${code} — klik for at kopiere`}
+      className="absolute left-3 top-3 z-10 flex cursor-pointer items-center gap-1.5 rounded-full py-1 pl-2.5 pr-2 text-[0.68rem] font-semibold transition-opacity hover:opacity-85"
+      style={{
+        background: "var(--accent)",
+        color: "#fff",
+        fontFamily: "var(--font-body)",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.18)",
+      }}
+    >
+      {copied ? <Check size={11} strokeWidth={3} /> : <Tag size={11} strokeWidth={2.5} />}
+      <span className="uppercase tracking-[0.06em]">{copied ? "Kopieret" : code}</span>
+      {!copied && <Copy size={10} style={{ opacity: 0.75 }} />}
+    </button>
   );
 }
 
@@ -334,8 +369,12 @@ export default function WishlistGrid({
             >
               {/* Produktflade — baggrunden følger billedets egen dominerende
                   farve, så fritlægninger på hvid smelter sammen med feltet
-                  i stedet for at ligge som en kasse i en kasse. */}
-              <a
+                  i stedet for at ligge som en kasse i en kasse. Rabatkoden
+                  ligger som søskende til linket, så knappen ikke ender inde i
+                  et <a>. */}
+              <div className="relative">
+                {item.discountCode && <DiscountBadge code={item.discountCode} />}
+                <a
                 href={item.url ?? undefined}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -393,7 +432,8 @@ export default function WishlistGrid({
                     Din
                   </span>
                 )}
-              </a>
+                </a>
+              </div>
 
               {/* Indhold */}
               <div className="flex flex-1 flex-col gap-3 p-4">

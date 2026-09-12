@@ -189,6 +189,8 @@ export type Wish = {
   colorHex?: string;
   size?: string;
   length?: string;
+  /** Rabatkode til webshoppen, fx WELCOME-15. */
+  discountCode?: string;
   /** Billedets kantfarve — bruges som flade bag produktfotoet. */
   plateColor?: string;
 };
@@ -196,7 +198,7 @@ export type Wish = {
 export async function getWishlist(): Promise<Wish[]> {
   return client.fetch(
     `*[_type == "wish"] | order(orderRank asc) {
-      _id, title, url, price, brand, color, colorHex, size, length, plateColor,
+      _id, title, url, price, brand, color, colorHex, size, length, discountCode, plateColor,
       image {
         asset->{
           url,

@@ -42,6 +42,13 @@ export const wish = defineType({
         "Beregnes automatisk af scripts/set-wish-plate.mjs ud fra billedets kantfarve, så fotoets baggrund smelter sammen med kortet.",
     }),
     defineField({
+      name: "discountCode",
+      title: "Rabatkode",
+      type: "string",
+      description:
+        "Fx WELCOME-15. Vises som en label øverst på kortet, så gæsten kan se og kopiere koden.",
+    }),
+    defineField({
       name: "brand",
       title: "Mærke",
       type: "string",
