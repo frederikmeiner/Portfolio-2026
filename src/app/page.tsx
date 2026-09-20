@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import NetflixIntro from "@/components/netflix/NetflixIntro";
 import { PROFILES, PROFILE_IDS } from "@/lib/profiles";
@@ -11,6 +11,16 @@ const profiles = PROFILE_IDS.map((id) => ({ id, ...PROFILES[id] }));
 export default function ProfileSelector() {
   const [introComplete, setIntroComplete] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
+
+  // Tilbage-knappen kan gendanne siden fra bfcache med den gamle state — så
+  // stod den valgte profil usynlig (opacity 0), men stadig klikbar.
+  useEffect(() => {
+    const onShow = (e: PageTransitionEvent) => {
+      if (e.persisted) setSelected(null);
+    };
+    window.addEventListener("pageshow", onShow);
+    return () => window.removeEventListener("pageshow", onShow);
+  }, []);
 
   function handleSelect(id: string) {
     setSelected(id);

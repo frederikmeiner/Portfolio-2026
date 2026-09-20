@@ -31,6 +31,10 @@ export default function SubPageLayout({ title, backHref, backLabel, maxWidth, he
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Over en hero ligger nav'en på et foto eller klip, ikke på sidens baggrund —
+  // temaets tekstfarver bliver mørkt på mørkt i lyst tema.
+  const onMedia = Boolean(hero) && !scrolled;
+
   return (
     <div style={{ background: "var(--background)", minHeight: "100vh" }}>
       <TrackVisit title={trackTitle ?? title} image={trackImage} />
@@ -47,15 +51,15 @@ export default function SubPageLayout({ title, backHref, backLabel, maxWidth, he
           <Link
             href={backHref}
             className="flex items-center gap-1 text-sm font-medium transition-opacity duration-200 hover:opacity-70"
-            style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}
+            style={{ color: onMedia ? "var(--on-media-muted)" : "var(--muted)", fontFamily: "var(--font-body)" }}
           >
             <ChevronLeft size={18} />
             {backLabel}
           </Link>
-          <span style={{ color: "var(--border)" }}>|</span>
+          <span style={{ color: onMedia ? "var(--on-media-tint-strong)" : "var(--border)" }}>|</span>
           <span
             className="text-sm font-semibold"
-            style={{ color: "var(--foreground)", fontFamily: "var(--font-heading)" }}
+            style={{ color: onMedia ? "var(--on-media)" : "var(--foreground)", fontFamily: "var(--font-heading)" }}
           >
             {title}
           </span>

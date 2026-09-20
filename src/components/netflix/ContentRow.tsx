@@ -77,11 +77,14 @@ export default function ContentRow({ title, children }: Props) {
           </button>
         )}
 
+        {/* scroll-px matcher px: uden den snapper første kort til scrollLeft = padding
+            i stedet for 0, så venstrepilen aldrig forsvinder og kortet klistrer
+            til skærmkanten. */}
         {/* Scrollable row — pt-6 giver plads til hover scale/y uden at blive klippet */}
         <div
           ref={scrollRef}
           onScroll={updateArrows}
-          className="flex gap-3 overflow-x-auto scrollbar-hide px-5 md:px-16 pt-6 pb-4"
+          className="flex gap-3 overflow-x-auto scrollbar-hide px-5 md:px-16 scroll-px-5 md:scroll-px-16 pt-6 pb-4"
           style={{ scrollSnapType: "x mandatory" }}
         >
           {children}

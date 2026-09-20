@@ -28,7 +28,7 @@ export default function ProjectTitlePage({ profile, project, all }: Props) {
       hero={<TitleHero project={project} />}
       maxWidth="1100px"
       trackTitle={project.title}
-      trackImage={project.image?.asset.url}
+      trackImage={project.image?.asset?.url}
     >
       {/* Meta-linje — som Netflix' "2024 · 3 sæsoner · HD" */}
       <ul

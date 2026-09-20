@@ -13,10 +13,16 @@ export default function ContactPage({ profile }: { profile: ProfileId }) {
   const { href, label } = PROFILES[profile];
   const [copied, setCopied] = useState(false);
 
-  function copyEmail() {
-    navigator.clipboard.writeText(EMAIL);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2200);
+  async function copyEmail() {
+    try {
+      // clipboard mangler uden for https og i nogle in-app-browsere.
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2200);
+    } catch {
+      // Kunne ikke kopiere — åbn mailprogrammet frem for at melde "Kopieret".
+      window.location.href = `mailto:${EMAIL}`;
+    }
   }
 
   return (

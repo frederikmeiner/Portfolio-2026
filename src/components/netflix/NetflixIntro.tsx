@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function NetflixIntro({ onComplete }: { onComplete: () => void }) {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -14,12 +14,33 @@ export default function NetflixIntro({ onComplete }: { onComplete: () => void })
     setTimeout(onComplete, 3400);
   }
 
+  // Introen dækker hele siden, så den skal også kunne startes uden mus —
+  // ellers sidder tastatur- og skærmlæserbrugere fast bag en sort skærm.
+  // Lytter på window, fordi intet på siden har fokus ved første indlæsning.
+  const startRef = useRef(handleClick);
+  useEffect(() => {
+    startRef.current = handleClick;
+  });
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        startRef.current();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   return (
     <motion.div
       className="fixed inset-0 z-50 bg-black flex items-center justify-center cursor-pointer"
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6 }}
       onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      aria-label="Fortsæt til forsiden"
     >
       <audio ref={audioRef} src="/netflix-tudum-sfx-n-c.mp3" preload="auto" />
 
@@ -35,7 +56,7 @@ export default function NetflixIntro({ onComplete }: { onComplete: () => void })
             className="text-white text-sm tracking-widest uppercase select-none"
             style={{ fontFamily: "var(--font-body)" }}
           >
-            Klik for at fortsætte
+            Klik eller tryk Enter for at fortsætte
           </motion.p>
         ) : (
           /* Intro animation */

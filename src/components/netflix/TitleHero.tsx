@@ -3,7 +3,7 @@ import type { Project } from "@/lib/sanity/queries";
 
 /** Toppen af en titel-side: projektets billede eller klip, med fade ned i siden. */
 export default function TitleHero({ project }: { project: Project }) {
-  const image = project.image?.asset.url;
+  const image = project.image?.asset?.url;
 
   return (
     <section className="relative overflow-hidden" style={{ height: "60vh", minHeight: 360 }}>

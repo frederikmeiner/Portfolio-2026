@@ -21,7 +21,7 @@ export type BentoItem = {
   _id: string;
   title: string;
   description?: string;
-  image?: { asset: { url: string } };
+  image?: { asset?: { url: string } | null };
   videoUrl?: string;
   liveUrl?: string;
   /** Internt link (titel-side). Sat → kortet linker hertil i stedet for liveUrl. */
@@ -34,7 +34,7 @@ export type Project = {
   title: string;
   slug: { current: string };
   description?: string;
-  image?: { asset: { url: string }; hotspot?: object };
+  image?: { asset?: { url: string } | null; hotspot?: object };
   technologies?: Skill[];
   videoUrl?: string;
   liveUrl?: string;
@@ -55,7 +55,7 @@ export type Experience = {
   kind?: "work" | "education";
   description?: string;
   highlights?: string[];
-  logo?: { asset: { url: string } };
+  logo?: { asset?: { url: string } | null };
   technologies?: Skill[];
 };
 
@@ -70,7 +70,7 @@ export async function getProjects(): Promise<Project[]> {
     `*[_type == "project"] | order(featured desc, orderRank asc) {
       _id, title, slug, description, featured, size, videoUrl, liveUrl, githubUrl, publishedAt,
       image { asset->{ url }, hotspot },
-      technologies[]->{ _id, name, category }
+      technologies[defined(@->_id)]->{ _id, name, category }
     }`
   );
 }
@@ -80,7 +80,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
     `*[_type == "project" && featured == true] | order(publishedAt desc) {
       _id, title, slug, description, liveUrl, githubUrl,
       image { asset->{ url }, hotspot },
-      technologies[]->{ _id, name, category }
+      technologies[defined(@->_id)]->{ _id, name, category }
     }`
   );
 }
@@ -97,7 +97,7 @@ export async function getProject(slug: string): Promise<Project | null> {
     `*[_type == "project" && slug.current == $slug][0] {
       _id, title, slug, description, featured, size, videoUrl, liveUrl, githubUrl, publishedAt,
       image { asset->{ url }, hotspot },
-      technologies[]->{ _id, name, category }
+      technologies[defined(@->_id)]->{ _id, name, category }
     }`,
     { slug }
   );
@@ -109,7 +109,7 @@ export type InspirationItem = {
     _id: string;
     title: string;
     description?: string;
-    image?: { asset: { url: string }; hotspot?: object };
+    image?: { asset?: { url: string } | null; hotspot?: object };
     videoUrl?: string;
     liveUrl?: string;
   };
@@ -161,7 +161,7 @@ export async function getExperiences(): Promise<Experience[]> {
     `*[_type == "experience"] | order(startDate desc) {
       _id, company, role, startDate, endDate, current, kind, description, highlights,
       logo { asset->{ url } },
-      technologies[]->{ _id, name, category }
+      technologies[defined(@->_id)]->{ _id, name, category }
     }`
   );
 }

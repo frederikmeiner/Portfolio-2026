@@ -47,7 +47,7 @@ export default function BentoCard({ item, index }: Props) {
   const href = internal ?? external;
   const hostname = getHostname(external);
 
-  const imageUrl = item.image?.asset.url ?? null;
+  const imageUrl = item.image?.asset?.url ?? null;
 
   const card = (
     <motion.div

@@ -10,7 +10,7 @@ type Props = { project: Project; href: string };
 
 /** Projektkort til rækker — samme mål som CategoryCard, men med projektets billede. */
 export default function ProjectCard({ project, href }: Props) {
-  const image = project.image?.asset.url;
+  const image = project.image?.asset?.url;
 
   return (
     <Link href={href} className="flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
