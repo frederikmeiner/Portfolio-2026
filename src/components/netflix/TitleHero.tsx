@@ -23,6 +23,19 @@ export default function TitleHero({ project }: { project: Project }) {
       ) : (
         <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #064e3b 0%, #10b981 100%)" }} />
       )}
+      {/* Sløring under titlen, tonet ud opad. Mørkere alene er ikke nok, når billedet
+          er et skærmbillede: sitets egen overskrift står stadig og støjer bag titlen. */}
+      <div
+        aria-hidden="true"
+        className="absolute bottom-0 left-0 right-0"
+        style={{
+          height: "62%",
+          backdropFilter: "blur(18px)",
+          WebkitBackdropFilter: "blur(18px)",
+          maskImage: "linear-gradient(to top, black 45%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to top, black 45%, transparent 100%)",
+        }}
+      />
       <div
         className="absolute inset-0"
         // Bunden er næsten dækkende et godt stykke op: mange billeder er skærmbilleder
