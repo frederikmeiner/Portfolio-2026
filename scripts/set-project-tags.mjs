@@ -19,6 +19,7 @@ const client = createClient({
 });
 
 const NEW_SKILLS = [
+  // Ikonet (Breakdances eget, uploadet til Sanity) sættes ikke her — createIfNotExists rører ikke et eksisterende dokument.
   { _id: "skill-breakdance", _type: "skill", name: "Breakdance", category: "Frontend", order: 6 },
   { _id: "skill-multisite", _type: "skill", name: "Multisite", category: "CMS", order: 8, icon: "https://cdn.simpleicons.org/wordpress" },
 ];
@@ -38,7 +39,6 @@ const TAGS = {
   genan: ["elementor", "multisite", ...WP],
   "hotel-de-ville": ["elementor", "multisite", ...WP],
   "roende-hoejskole": ["elementor", ...WP],
-  agenz: [...WP],
   kjaerdesign: [...WP],
   "savoy-hotel": ["gsap", ...WP, "plesk"],
   "gourmet-catering": ["elementor", "gsap", ...WP],
