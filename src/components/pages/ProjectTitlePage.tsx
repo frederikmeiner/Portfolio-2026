@@ -5,6 +5,7 @@ import TitleHero from "@/components/netflix/TitleHero";
 import TrackView from "@/components/netflix/TrackView";
 import ContentRow from "@/components/netflix/ContentRow";
 import ProjectCard from "@/components/cards/ProjectCard";
+import ProjectCase from "@/components/pages/ProjectCase";
 import { relatedProjects } from "@/lib/related-projects";
 import { PROFILES, type ProfileId } from "@/lib/profiles";
 import { techSlug } from "@/lib/tech-slug";
@@ -100,6 +101,8 @@ export default function ProjectTitlePage({ profile, project, all }: Props) {
           {project.description}
         </p>
       )}
+
+      <ProjectCase project={project} />
 
       {tech.length > 0 && (
         <div className="mb-16">

@@ -25,7 +25,12 @@ export default function TitleHero({ project }: { project: Project }) {
       )}
       <div
         className="absolute inset-0"
-        style={{ background: "linear-gradient(to top, var(--background) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0.35) 100%)" }}
+        // Bunden er næsten dækkende et godt stykke op: mange billeder er skærmbilleder
+        // af sitet, og sitets egen overskrift lå ellers og skinnede igennem bag titlen.
+        style={{
+          background:
+            "linear-gradient(to top, var(--background) 0%, color-mix(in srgb, var(--background) 88%, transparent) 24%, rgba(0,0,0,0.3) 58%, rgba(0,0,0,0.35) 100%)",
+        }}
       />
       <div className="absolute bottom-0 left-0 right-0 px-5 md:px-16 pb-6">
         <h1

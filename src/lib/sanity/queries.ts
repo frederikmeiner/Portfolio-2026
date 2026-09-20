@@ -45,6 +45,14 @@ export type Project = {
   featured?: boolean;
   size?: BentoSize;
   publishedAt?: string;
+  /** Case-felter — hentes kun til projektsiden (getProject). */
+  role?: string;
+  challenge?: string;
+  solution?: string;
+  highlights?: string[];
+  facts?: { label: string; value: string }[];
+  result?: string;
+  gallery?: { url: string; width: number; height: number; caption?: string }[];
 };
 
 export type Experience = {
@@ -100,7 +108,15 @@ export async function getProject(slug: string): Promise<Project | null> {
     `*[_type == "project" && slug.current == $slug][0] {
       _id, title, slug, description, featured, size, videoUrl, liveUrl, githubUrl, publishedAt,
       image { asset->{ url }, hotspot },
-      technologies[defined(@->_id)]->{ _id, name, category }
+      technologies[defined(@->_id)]->{ _id, name, category },
+      role, challenge, solution, highlights, result,
+      facts[]{ label, value },
+      "gallery": gallery[defined(asset)]{
+        "url": asset->url,
+        "width": asset->metadata.dimensions.width,
+        "height": asset->metadata.dimensions.height,
+        caption
+      }
     }`,
     { slug }
   );
