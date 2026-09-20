@@ -71,7 +71,8 @@ export default function NetflixNav({ profile }: Props) {
         >
           <Image
             src={profileAvatar}
-            alt={profileLabel}
+            // Pynt: profilens navn står som tekst lige ved siden af, så en alt-tekst læses op to gange.
+            alt=""
             width={320}
             height={320}
             className="w-7 h-7 rounded object-cover"
@@ -120,7 +121,8 @@ export default function NetflixNav({ profile }: Props) {
                   >
                     <Image
                       src={p.avatar}
-                      alt={p.label}
+                      // Pynt: profilens navn står som tekst lige ved siden af, så en alt-tekst læses op to gange.
+                      alt=""
                       width={320}
                       height={320}
                       className="w-8 h-8 rounded object-cover"

@@ -1,7 +1,7 @@
 # Tjekker koden og deployer til VPS'en ved push til main.
 #
-# Deploy kører kun, hvis "check" er grøn: lint, typer, unit-tests, build og en
-# browser-test af login på ønskelisten. Pull requests får samme tjek, men
+# Deploy kører kun, hvis "check" er grøn: lint, typer, unit-tests, build, en
+# browser-test af login på ønskelisten og et Lighthouse-loft. Pull requests får samme tjek, men
 # deployer aldrig.
 #
 # Nøglen på serveren er låst til én forced command (se
@@ -20,7 +20,7 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       # Offentlige værdier — Sanity-datasættet kan læses uden nøgle, så build'et
       # her behøver ingen secrets.
@@ -46,6 +46,13 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+      # Lighthouse-loft: tilgængelighed skal være 100, og hver side har et loft for
+      # vægt. Ydelse advarer kun, for den svinger med runneren. Se scripts/lighthouse-check.mjs.
+      - name: Lighthouse-loft
+        run: |
+          npx next start -p 3100 > /dev/null 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://127.0.0.1:3100/robots.txt > /dev/null && break; sleep 1; done
+          node scripts/lighthouse-check.mjs http://127.0.0.1:3100
       - name: Gem Playwright-spor ved fejl
         if: failure()
         uses: actions/upload-artifact@v4
