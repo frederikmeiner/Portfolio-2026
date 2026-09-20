@@ -180,7 +180,7 @@ const CASES = {
     role: "Idé, design og udvikling — eget projekt",
     facts: [
       { label: "Profiler", value: "3" },
-      { label: "Projekter fra Sanity", value: "29" },
+      { label: "Projekter fra Sanity", value: "28" },
       { label: "Tests før hvert deploy", value: "20" },
       { label: "Fra push til live", value: "5 min" },
     ],
