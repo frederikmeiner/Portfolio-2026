@@ -21,6 +21,8 @@ const client = createClient({
 const NEW_SKILLS = [
   // Ikonet (Breakdances eget, uploadet til Sanity) sættes ikke her — createIfNotExists rører ikke et eksisterende dokument.
   { _id: "skill-breakdance", _type: "skill", name: "Breakdance", category: "Frontend", order: 6 },
+  // Lenis' eget ikon, uploadet til Sanity.
+  { _id: "skill-lenis", _type: "skill", name: "Lenis", category: "Frontend", order: 5, icon: "https://cdn.sanity.io/images/er2djct5/production/ab050948b3259b410df8df191d4d148e1ca58f7a-180x180.png" },
   { _id: "skill-multisite", _type: "skill", name: "Multisite", category: "CMS", order: 8, icon: "https://cdn.simpleicons.org/wordpress" },
 ];
 
@@ -28,11 +30,11 @@ const WP = ["wordpress", "php", "mysql"];
 
 /** slug → skill-id'er uden "skill-"-præfiks. */
 const TAGS = {
-  caolin: ["breakdance", ...WP, "cloudways"],
+  caolin: ["breakdance", "lenis", "multisite", ...WP, "cloudways"],
   icars: ["elementor", ...WP],
   kompositterrasse: ["woocommerce", "elementor", ...WP],
   // Headless: Next.js foran, WordPress som CMS bagved.
-  "brdr-gamsgaard": ["nextjs", "react", "typescript", "tailwind", ...WP],
+  "brdr-gamsgaard": ["nextjs", "react", "typescript", "tailwind", "lenis", ...WP],
   "brand-by-hand": ["breakdance", "woocommerce", "gsap", ...WP],
   vinoble: ["woocommerce", "elementor", "gsap", ...WP],
   "danida-fellowship-centre": ["breakdance", "gsap", ...WP],
@@ -40,9 +42,9 @@ const TAGS = {
   "hotel-de-ville": ["elementor", "multisite", ...WP],
   "roende-hoejskole": ["elementor", ...WP],
   kjaerdesign: [...WP],
-  "savoy-hotel": ["gsap", ...WP, "plesk"],
+  "savoy-hotel": ["gsap", "lenis", ...WP, "plesk"],
   "gourmet-catering": ["elementor", "gsap", ...WP],
-  "wp-nordic": ["woocommerce", "elementor", "gsap", "multisite", ...WP, "plesk"],
+  "wp-nordic": ["woocommerce", "elementor", "gsap", "lenis", "multisite", ...WP, "plesk"],
   surfcafe: ["woocommerce", "elementor", ...WP],
   silikatteknik: ["woocommerce", "elementor", ...WP],
   "nordic-glass": ["elementor", "gsap", "multisite", ...WP, "plesk"],

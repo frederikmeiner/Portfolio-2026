@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
-import { X } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 import BentoGrid from "@/components/cards/BentoGrid";
 import type { BentoItem } from "@/lib/sanity/queries";
 import type { TechCount } from "@/lib/tech-slug";
@@ -11,6 +11,12 @@ import type { TechCount } from "@/lib/tech-slug";
 type Props = { items: BentoItem[]; techs: TechCount[] };
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+/**
+ * Så mange teknologier vises fra start. Med alle 18 stod mærkerne som én lang
+ * stribe på brede skærme og som en væg på mobil — resten ligger bag "flere".
+ */
+const PRIMARY = 8;
 
 /**
  * Projektoversigten med teknologi-filter. Filteret bor i ?tech=, så et klik på
@@ -30,34 +36,31 @@ export default function ProjectsBrowser({ items, techs }: Props) {
     router.replace(slug ? `${pathname}?tech=${slug}` : pathname, { scroll: false });
   }
 
-  const chips = [{ slug: null, name: "Alle", count: items.length }, ...techs];
-
-  // På mobil er mærkerne én række man swiper i. Kommer man ind via et link til
-  // fx ?tech=multisite, skal det valgte mærke være synligt — ikke gemt til højre.
-  const activeChip = useRef<HTMLButtonElement>(null);
-  const activeSlug = active?.slug ?? null;
-  useEffect(() => {
-    activeChip.current?.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
-  }, [activeSlug]);
+  const [expanded, setExpanded] = useState(false);
+  const hiddenCount = Math.max(0, techs.length - PRIMARY);
+  // Er filteret sat til en af de skjulte (fx via et link), foldes listen ud af sig selv.
+  const showAll = expanded || (active !== null && techs.indexOf(active) >= PRIMARY);
+  const chips = [{ slug: null, name: "Alle", count: items.length }, ...(showAll ? techs : techs.slice(0, PRIMARY))];
 
   return (
     <MotionConfig reducedMotion="user">
-      {/* Én række man swiper i på mobil; ombrydes fra md. Den negative margin lader
-          rækken gå helt ud til skærmkanten, så mærkerne ikke klippes ved padding'en. */}
-      <div
-        role="group"
-        aria-label="Filtrér på teknologi"
-        className="scrollbar-hide -mx-5 mb-4 flex gap-2 overflow-x-auto px-5 pb-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-0"
-      >
+      {/* Brydes på alle skærme, og holdes smal nok til at ende som to-tre pæne
+          linjer frem for én stribe tværs over en bred skærm. */}
+      <div role="group" aria-label="Filtrér på teknologi" className="mb-4 flex max-w-3xl flex-wrap gap-2">
+        <AnimatePresence initial={false}>
         {chips.map((chip) => {
           const selected = (active?.slug ?? null) === chip.slug;
           return (
-            <button
+            <motion.button
               key={chip.slug ?? "alle"}
-              ref={selected ? activeChip : undefined}
+              layout
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.85 }}
+              transition={{ duration: 0.25, ease: EASE }}
               onClick={() => select(selected ? null : chip.slug)}
               aria-pressed={selected}
-              className="relative flex-shrink-0 cursor-pointer rounded-full px-4 py-2 text-xs font-medium outline-offset-2 transition-colors duration-300"
+              className="relative cursor-pointer rounded-full px-3.5 py-1.5 text-xs font-medium outline-offset-2 transition-colors duration-300 md:px-4 md:py-2"
               style={{
                 color: selected ? "var(--background)" : "var(--foreground)",
                 border: "1px solid var(--border)",
@@ -76,11 +79,31 @@ export default function ProjectsBrowser({ items, techs }: Props) {
               <span className="relative">
                 {chip.name} <span style={{ opacity: 0.55 }}>{chip.count}</span>
               </span>
-            </button>
+            </motion.button>
           );
         })}
+        </AnimatePresence>
+
+        {hiddenCount > 0 && (
+          <motion.button
+            layout
+            transition={{ duration: 0.25, ease: EASE }}
+            onClick={() => setExpanded(!showAll)}
+            aria-expanded={showAll}
+            className="flex cursor-pointer items-center gap-1 rounded-full px-3.5 py-1.5 text-xs font-medium transition-opacity hover:opacity-70 md:px-4 md:py-2"
+            style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}
+          >
+            {showAll ? "Færre" : `+ ${hiddenCount} flere`}
+            <ChevronDown
+              size={13}
+              style={{ transform: showAll ? "rotate(180deg)" : "none", transition: "transform 0.3s ease" }}
+            />
+          </motion.button>
+        )}
       </div>
 
+      {/* layout="position": når mærkerne folder ud, glider resten ned i stedet for at hoppe. */}
+      <motion.div layout="position" transition={{ duration: 0.3, ease: EASE }}>
       {/* Fast højde, så grid'et ikke hopper, når linjen kommer og går. */}
       <div className="mb-6 flex h-6 items-center" aria-live="polite">
         <AnimatePresence mode="wait" initial={false}>
@@ -111,6 +134,7 @@ export default function ProjectsBrowser({ items, techs }: Props) {
       </div>
 
       <BentoGrid items={visible} emptyText="Ingen projekter med den teknologi endnu." />
+      </motion.div>
     </MotionConfig>
   );
 }
