@@ -137,7 +137,8 @@ export const PROFILES: Record<ProfileId, Profile> = {
 export const PROFILE_IDS = Object.keys(PROFILES) as ProfileId[];
 
 export function isProfileId(x: string): x is ProfileId {
-  return x in PROFILES;
+  // Ikke `in`: den er også sand for nedarvede nøgler som "constructor".
+  return Object.hasOwn(PROFILES, x);
 }
 
 export function hasPage(profile: ProfileId, page: PageId) {

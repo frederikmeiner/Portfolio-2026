@@ -49,7 +49,9 @@ export const metadata: Metadata = {
     description: "Projekter, erfaring og kompetencer præsenteret som en Netflix-profil.",
     images: ["/Frederik-portraet.jpg"],
   },
-  alternates: { canonical: "/" },
+  // "./" opløses mod den aktuelle sti, så hver side peger på sig selv. Med "/"
+  // arvede alle undersider forsiden som canonical og blev foldet ind i den.
+  alternates: { canonical: "./" },
 };
 
 /**

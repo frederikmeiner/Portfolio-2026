@@ -4,7 +4,9 @@ import { getWishlist } from "@/lib/sanity/queries";
 import { createServerSupabase, isSupabaseConfigured } from "@/lib/supabase/server";
 import { PROFILES, type ProfileId } from "@/lib/profiles";
 
-export default async function WishlistPage({ profile }: { profile: ProfileId }) {
+type Props = { profile: ProfileId; loginFailed?: boolean };
+
+export default async function WishlistPage({ profile, loginFailed = false }: Props) {
   const items = await getWishlist();
   const { href, label } = PROFILES[profile];
   const authReady = isSupabaseConfigured();
@@ -53,6 +55,7 @@ export default async function WishlistPage({ profile }: { profile: ProfileId }) 
         hideFromOwner={hideFromOwner}
         reservedIds={reservedIds}
         myIds={myIds}
+        loginFailed={loginFailed}
       />
     </SubPageLayout>
   );

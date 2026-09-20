@@ -18,6 +18,8 @@ type Props = {
   user?: WishlistUser | null;
   /** Ejeren ser aldrig reservationer — hverken hvilke eller af hvem. */
   isOwner?: boolean;
+  /** Login-callbacken kunne ikke veksle koden til en session. */
+  loginFailed?: boolean;
   /** Databasens toggle. Kun når den er slået FRA får ejeren en advarsel. */
   hideFromOwner?: boolean;
   reservedIds?: string[];
@@ -122,6 +124,7 @@ export default function WishlistGrid({
   hideFromOwner = true,
   reservedIds = [],
   myIds = [],
+  loginFailed = false,
 }: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -139,13 +142,28 @@ export default function WishlistGrid({
     setMine(new Set(myIds));
   }
 
-  const [busyId, setBusyId] = useState<string | null>(null);
+  // Et sæt, ikke ét id: to hurtige klik på hver sit ønske skal begge forblive
+  // låst, indtil deres eget svar er kommet.
+  const [busyIds, setBusyIds] = useState(() => new Set<string>());
+  const setBusy = (wishId: string, on: boolean) =>
+    setBusyIds((s) => {
+      const next = new Set(s);
+      if (on) next.add(wishId);
+      else next.delete(wishId);
+      return next;
+    });
   const ownerCanSee = isOwner && !hideFromOwner;
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(
+    loginFailed && !user ? "Login lykkedes ikke — linket kan være udløbet. Prøv igen." : null
+  );
   const [emailOpen, setEmailOpen] = useState(false);
 
-  const showReservations = authReady && Boolean(user);
-  const takenCount = showReservations ? reserved.size : 0;
+  // Ejeren får ingen knapper, mens reservationer er skjult for ham: et klik på
+  // et taget ønske ville afsløre det via databasens unik-fejl.
+  const showReservations = authReady && Boolean(user) && !(isOwner && hideFromOwner);
+  // Tæl kun ønsker der stadig findes — en reservation overlever, at ønsket
+  // slettes i Sanity, og gav ellers "6 af 5 reserveret".
+  const takenCount = showReservations ? items.filter((i) => reserved.has(i._id)).length : 0;
 
   async function signIn() {
     const supabase = getBrowserSupabase();
@@ -164,11 +182,11 @@ export default function WishlistGrid({
   }
 
   async function reserve(wishId: string) {
-    setBusyId(wishId);
+    setBusy(wishId, true);
     setMessage(null);
     const supabase = getBrowserSupabase();
     const { error } = await supabase.from("reservations").insert({ wish_id: wishId });
-    setBusyId(null);
+    setBusy(wishId, false);
 
     if (!error) {
       setReserved((s) => new Set(s).add(wishId));
@@ -184,13 +202,15 @@ export default function WishlistGrid({
   }
 
   async function unreserve(wishId: string) {
-    setBusyId(wishId);
+    setBusy(wishId, true);
     setMessage(null);
     const supabase = getBrowserSupabase();
-    const { error } = await supabase.from("reservations").delete().eq("wish_id", wishId);
-    setBusyId(null);
+    // select() giver de slettede rækker tilbage. RLS filtrerer stille, så uden
+    // den ligner "intet slettet" en succes, og ønsket blev vist som ledigt.
+    const { data, error } = await supabase.from("reservations").delete().eq("wish_id", wishId).select("wish_id");
+    setBusy(wishId, false);
 
-    if (!error) {
+    if (!error && data?.length) {
       setReserved((s) => {
         const next = new Set(s);
         next.delete(wishId);
@@ -359,12 +379,12 @@ export default function WishlistGrid({
           const isTaken = showReservations && reserved.has(item._id) && !isMine;
           const hostname = getHostname(item.url);
           const details = getDetails(item);
-          const imageUrl = item.image?.asset.url;
+          const imageUrl = item.image?.asset?.url;
           // Fotoets egen kantfarve, så den fritlagte baggrund flyder ud i
           // fladen i stedet for at stå som en kasse. Falder tilbage til et
           // neutralt studielys, hvis farven ikke er beregnet endnu.
           const tile = item.plateColor ?? "#f2f2f3";
-          const busy = busyId === item._id || pending;
+          const busy = busyIds.has(item._id) || pending;
 
           return (
             <motion.article

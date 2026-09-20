@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProjectTitlePage from "@/components/pages/ProjectTitlePage";
 import { getProject, getProjects, getProjectSlugs } from "@/lib/sanity/queries";
-import { profilesWithPage, type ProfileId } from "@/lib/profiles";
+import { hasPage, isProfileId, profilesWithPage } from "@/lib/profiles";
 
-type Params = Promise<{ profile: ProfileId; slug: string }>;
+type Params = Promise<{ profile: string; slug: string }>;
 
-export const dynamicParams = false;
+// Slugs fra build'et er kun en forvarmning. Projekter oprettet i Sanity bagefter
+// skal også virke uden deploy — oversigten viser dem efter et minut, og med
+// dynamicParams = false pegede deres kort på en 404. Ukendte profiler og slugs
+// afvises i stedet i selve siden.
 
 export async function generateStaticParams() {
   const slugs = await getProjectSlugs();
@@ -17,7 +20,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { slug } = await params;
   const project = await getProject(slug);
   if (!project) return {};
-  const image = project.image?.asset.url;
+  const image = project.image?.asset?.url;
   return {
     title: project.title,
     description: project.description,
@@ -32,6 +35,6 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function Page({ params }: { params: Params }) {
   const { profile, slug } = await params;
   const [project, all] = await Promise.all([getProject(slug), getProjects()]);
-  if (!project) notFound();
+  if (!project || !isProfileId(profile) || !hasPage(profile, "projects")) notFound();
   return <ProjectTitlePage profile={profile} project={project} all={all} />;
 }

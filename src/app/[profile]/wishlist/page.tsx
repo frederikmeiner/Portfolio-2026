@@ -12,8 +12,13 @@ export const metadata: Metadata = {
 // Reservationer afhænger af den indloggede bruger — må aldrig caches.
 export const dynamic = "force-dynamic";
 
-export default async function Page({ params }: { params: Promise<{ profile: string }> }) {
-  const { profile } = await params;
+type Props = {
+  params: Promise<{ profile: string }>;
+  searchParams: Promise<{ login?: string }>;
+};
+
+export default async function Page({ params, searchParams }: Props) {
+  const [{ profile }, { login }] = await Promise.all([params, searchParams]);
   if (!isProfileId(profile) || !hasPage(profile, "wishlist")) notFound();
-  return <WishlistPage profile={profile} />;
+  return <WishlistPage profile={profile} loginFailed={login === "fejl"} />;
 }
