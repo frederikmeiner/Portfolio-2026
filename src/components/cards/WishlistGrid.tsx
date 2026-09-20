@@ -251,7 +251,7 @@ export default function WishlistGrid({
           {ownerCanSee ? (
             <Eye size={16} style={{ color: "#facc15", flexShrink: 0 }} />
           ) : (
-            <ShieldCheck size={16} style={{ color: "var(--accent)", flexShrink: 0 }} />
+            <ShieldCheck size={16} style={{ color: "var(--accent-text)", flexShrink: 0 }} />
           )}
 
           <p
@@ -431,6 +431,8 @@ export default function WishlistGrid({
                         filter: isTaken ? "grayscale(1) opacity(0.45)" : "none",
                       }}
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      // Første række er det største på skærmen ved indlæsning.
+                      preload={i < 3}
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center">
@@ -469,7 +471,7 @@ export default function WishlistGrid({
 
               {/* Indhold */}
               <div className="flex flex-1 flex-col gap-3 p-4">
-                <h3
+                <h2
                   className="text-[0.92rem] font-semibold leading-snug"
                   style={{
                     color: "var(--foreground)",
@@ -483,7 +485,7 @@ export default function WishlistGrid({
                   title={item.title}
                 >
                   {item.title}
-                </h3>
+                </h2>
 
                 {item.price && (
                   <p

@@ -42,9 +42,6 @@ export default function BentoCard({ item, index }: Props) {
   const hostname = getHostname(external);
 
   const imageUrl = item.image?.asset?.url ?? null;
-  // <video poster> går uden om next/image, så Sanity skalerer selv — ellers
-  // hentes originalen i fuld størrelse bare for at ligge bag et klip.
-  const posterUrl = imageUrl?.startsWith("https://cdn.sanity.io/") ? `${imageUrl}?w=1000&auto=format` : imageUrl;
 
   const card = (
     <motion.div
@@ -63,24 +60,23 @@ export default function BentoCard({ item, index }: Props) {
         variants={{ idle: { scale: 1 }, hovered: { scale: 1.07 } }}
         transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
       >
-        {item.videoUrl ? (
-          // Video vinder over billedet. Screenshottet bruges som poster,
-          // så kortet ikke står sort mens videoen loader. Uden billede står
-          // kortets gradient bag, indtil klippet er hentet.
-          <div className="w-full h-full" style={{ background: imageUrl ? undefined : gradient }}>
-            <InViewVideo src={item.videoUrl} poster={posterUrl ?? undefined} className="w-full h-full object-cover" />
-          </div>
-        ) : imageUrl ? (
+        {imageUrl ? (
           <Image
             src={imageUrl}
             alt={item.title}
             fill
             className="object-cover"
-            sizes="(max-width: 1024px) 50vw, 25vw"
+            // Store kort fylder det halve af grid'et, ikke en fjerdedel.
+            sizes={isLarge ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 1024px) 50vw, 25vw"}
+            // De to første kort er det største på skærmen ved indlæsning.
+            preload={index < 2}
+            fetchPriority={index < 2 ? "high" : undefined}
           />
         ) : (
           <div className="w-full h-full" style={{ background: gradient }} />
         )}
+        {/* Klippet ligger oven på billedet og toner ind, når det kører. */}
+        {item.videoUrl && <InViewVideo src={item.videoUrl} className="absolute inset-0 h-full w-full object-cover" />}
       </motion.div>
 
       {/* Persistent bottom gradient + title (fades out on hover) */}

@@ -48,7 +48,7 @@ export default function ProjectTitlePage({ profile, project, all }: Props) {
           {tech.length} {tech.length === 1 ? "teknologi" : "teknologier"}
         </li>
         {project.featured && (
-          <li className="flex items-center gap-1" style={{ color: "var(--accent)" }}>
+          <li className="flex items-center gap-1" style={{ color: "var(--accent-text)" }}>
             <Star size={13} fill="currentColor" /> Fremhævet
           </li>
         )}

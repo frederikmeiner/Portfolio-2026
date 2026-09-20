@@ -57,6 +57,7 @@ export default async function HomePage({ profile }: { profile: ProfileId }) {
   return (
     <div style={{ background: "var(--background)", minHeight: "100vh" }}>
       <NetflixNav profile={profile} />
+      <main>
       {home.hero === "wishlist" ? (
         <FamilyHero media={heroMedia} />
       ) : (
@@ -74,6 +75,7 @@ export default async function HomePage({ profile }: { profile: ProfileId }) {
           </div>
         ))}
       </div>
+      </main>
     </div>
   );
 }

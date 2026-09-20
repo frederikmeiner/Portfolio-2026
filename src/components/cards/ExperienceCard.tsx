@@ -37,7 +37,7 @@ export default function ExperienceCard({ experience }: { experience: Experience 
         </p>
         <p
           className="text-sm font-medium mt-0.5"
-          style={{ color: "var(--accent)", fontFamily: "var(--font-body)" }}
+          style={{ color: "var(--accent-text)", fontFamily: "var(--font-body)" }}
         >
           {experience.company}
         </p>

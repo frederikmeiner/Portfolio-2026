@@ -32,7 +32,7 @@ function TimelineItem({ item, last }: { item: Experience; last: boolean }) {
             </p>
             <p
               className="text-sm font-medium mt-0.5"
-              style={{ color: "var(--accent)", fontFamily: "var(--font-body)" }}
+              style={{ color: "var(--accent-text)", fontFamily: "var(--font-body)" }}
             >
               {item.company}
             </p>
@@ -72,7 +72,7 @@ function TimelineItem({ item, last }: { item: Experience; last: boolean }) {
                 className="text-sm leading-relaxed pl-4 relative"
                 style={{ color: "var(--foreground)", fontFamily: "var(--font-body)" }}
               >
-                <span className="absolute left-0" style={{ color: "var(--accent)" }}>
+                <span className="absolute left-0" style={{ color: "var(--accent-text)" }}>
                   ·
                 </span>
                 {h}

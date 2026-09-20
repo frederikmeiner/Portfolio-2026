@@ -26,7 +26,7 @@ function Prose({ text }: { text: string }) {
 function Section({ label, title, children }: { label: string; title: string; children: React.ReactNode }) {
   return (
     <section>
-      <p className={kicker} style={{ color: "var(--accent)", fontFamily: "var(--font-body)" }}>
+      <p className={kicker} style={{ color: "var(--accent-text)", fontFamily: "var(--font-body)" }}>
         {label}
       </p>
       <h2 className={heading} style={{ color: "var(--foreground)", fontFamily: "var(--font-heading)" }}>
@@ -137,7 +137,7 @@ export default function ProjectCase({ project }: { project: Project }) {
           <ul className="grid gap-x-10 gap-y-3 md:grid-cols-2">
             {highlights.map((item) => (
               <li key={item} className="flex gap-3">
-                <Check size={18} className="mt-1 flex-shrink-0" style={{ color: "var(--accent)" }} />
+                <Check size={18} className="mt-1 flex-shrink-0" style={{ color: "var(--accent-text)" }} />
                 <span
                   className={body}
                   style={{ color: "var(--foreground)", fontFamily: "var(--font-body)", opacity: 0.88 }}

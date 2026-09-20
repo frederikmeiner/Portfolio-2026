@@ -77,7 +77,8 @@ export default function ProjectsBrowser({ items, techs }: Props) {
                 />
               )}
               <span className="relative">
-                {chip.name} <span style={{ opacity: 0.55 }}>{chip.count}</span>
+                {/* 0.7 og ikke lavere: på det valgte (lyse) mærke faldt tallet under 4.5:1. */}
+                {chip.name} <span style={{ opacity: 0.7 }}>{chip.count}</span>
               </span>
             </motion.button>
           );

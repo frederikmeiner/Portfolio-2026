@@ -85,8 +85,8 @@ export default function SkillCard({ skill, projectCount = 0, projectsHref }: Pro
         </div>
 
         {linked && (
-          <span className="text-xs font-medium" style={{ color: "var(--accent)", fontFamily: "var(--font-body)" }}>
-            {projectCount} {projectCount === 1 ? "projekt" : "projekter"} →
+          <span className="text-xs font-medium" style={{ color: "var(--accent-text)", fontFamily: "var(--font-body)" }}>
+            {projectCount} {projectCount === 1 ? "projekt" : "projekter"} <span aria-hidden="true">→</span>
           </span>
         )}
       </div>
@@ -94,7 +94,9 @@ export default function SkillCard({ skill, projectCount = 0, projectsHref }: Pro
   );
 
   return linked ? (
-    <Link href={projectsHref} aria-label={`${skill.name}: se ${projectCount} ${projectCount === 1 ? "projekt" : "projekter"}`}>
+    // Ingen aria-label: kortets synlige tekst er allerede linkets navn, og en label
+    // med anden ordlyd bryder stemmestyring ("klik på React").
+    <Link href={projectsHref}>
       {card}
     </Link>
   ) : (

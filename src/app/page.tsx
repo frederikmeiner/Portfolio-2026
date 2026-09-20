@@ -35,7 +35,7 @@ export default function ProfileSelector() {
         )}
       </AnimatePresence>
 
-    <motion.div
+    <motion.main
       initial={{ opacity: 0 }}
       animate={{ opacity: introComplete ? 1 : 0 }}
       transition={{ duration: 0.8 }}
@@ -111,7 +111,7 @@ export default function ProfileSelector() {
           </motion.button>
         ))}
       </motion.div>
-    </motion.div>
+    </motion.main>
     </>
   );
 }

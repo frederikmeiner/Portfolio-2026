@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -70,15 +69,14 @@ export default function SubPageLayout({ title, backHref, backLabel, maxWidth, he
         </div>
       </div>
 
+      <main>
       {hero}
 
-      {/* Page content */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className={`${hero ? "pt-6" : "pt-24"} pb-24 px-5 md:px-16`}
-      >
+      {/* Page content. Indtoningen er ren CSS (.page-in i globals.css) og ikke Framer
+          Motion: med initial={{ opacity: 0 }} sendte serveren hele siden usynlig, og
+          intet blev vist, før JavaScript var startet. Browseren regner ikke usynligt
+          indhold med, så sidens største billede talte aldrig som LCP. */}
+      <div className={`page-in ${hero ? "pt-6" : "pt-24"} pb-24 px-5 md:px-16`}>
         <div className="mx-auto w-full" style={{ maxWidth }}>
           {title && (
             <h1
@@ -90,7 +88,8 @@ export default function SubPageLayout({ title, backHref, backLabel, maxWidth, he
           )}
           {children}
         </div>
-      </motion.div>
+      </div>
+      </main>
     </div>
   );
 }

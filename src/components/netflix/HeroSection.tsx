@@ -32,7 +32,7 @@ export default function HeroSection({ profileLabel, media = "hero-developer" }: 
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
           className="text-sm font-semibold uppercase tracking-widest mb-4"
-          style={{ color: "var(--accent)", fontFamily: "var(--font-body)" }}
+          style={{ color: "var(--accent-text)", fontFamily: "var(--font-body)" }}
         >
           {profileLabel}-profil
         </motion.p>

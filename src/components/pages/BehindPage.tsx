@@ -80,7 +80,7 @@ if (synced !== serverState) {
     title: "Push til main er deploy",
     body: [
       "Siden kører på en VPS bag nginx. Et push til main starter en GitHub Action, som logger ind på serveren og bygger. Det er bevidst enkelt: ingen platform imellem, og jeg ved præcis, hvad der kører hvor.",
-      "Det næste skridt er en port foran: lint, test og build skal være grønne, før noget når serveren — sammen med en browser-test af login på ønskelisten, som ville have fanget fejlen ovenfor.",
+      "Foran deployet står en port: lint, typetjek, unit-tests, build og en browser-test skal være grønne, før noget når serveren. Browser-testen logger ind på ønskelisten mod en falsk Supabase og kræver, at reservationerne vises uden genindlæsning — den bliver rød, hvis rettelsen ovenfor fjernes.",
     ],
   },
 ];
@@ -123,7 +123,7 @@ export default function BehindPage({ profile }: { profile: ProfileId }) {
           <section key={section.title}>
             <p
               className="mb-2 text-xs font-semibold uppercase tracking-widest"
-              style={{ color: "var(--accent)", fontFamily: "var(--font-body)" }}
+              style={{ color: "var(--accent-text)", fontFamily: "var(--font-body)" }}
             >
               {section.kicker}
             </p>

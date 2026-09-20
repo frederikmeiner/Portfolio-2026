@@ -85,7 +85,7 @@ export default function ContactPage({ profile }: { profile: ProfileId }) {
                 style={{ fontFamily: "var(--font-heading)", color: "var(--foreground)" }}
               >
                 Lad os<br />
-                <span style={{ color: "var(--accent)" }}>snakke sammen</span>
+                <span style={{ color: "var(--accent-text)" }}>snakke sammen</span>
               </motion.h1>
 
               <motion.p
@@ -115,7 +115,7 @@ export default function ContactPage({ profile }: { profile: ProfileId }) {
                   maxWidth: "fit-content",
                 }}
               >
-                <Mail size={15} style={{ color: "var(--accent)" }} />
+                <Mail size={15} style={{ color: "var(--accent-text)" }} />
                 <span
                   className="text-sm font-medium tracking-wide"
                   style={{ fontFamily: "var(--font-body)", color: "var(--foreground)" }}

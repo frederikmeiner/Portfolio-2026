@@ -40,7 +40,7 @@ export default function NetflixIntro({ onComplete }: { onComplete: () => void })
       onClick={handleClick}
       role="button"
       tabIndex={0}
-      aria-label="Fortsæt til forsiden"
+      aria-label="Klik eller tryk Enter for at fortsætte"
     >
       <audio ref={audioRef} src="/netflix-tudum-sfx-n-c.mp3" preload="auto" />
 

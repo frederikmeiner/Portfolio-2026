@@ -4,13 +4,16 @@ import type { Project } from "@/lib/sanity/queries";
 /** Toppen af en titel-side: projektets billede eller klip, med fade ned i siden. */
 export default function TitleHero({ project }: { project: Project }) {
   const image = project.image?.asset?.url;
+  // <video poster> går uden om next/image, så Sanity skalerer selv — ellers
+  // hentes originalen på flere MB bare for at ligge bag et klip.
+  const poster = image?.startsWith("https://cdn.sanity.io/") ? `${image}?w=1600&q=70&auto=format` : image;
 
   return (
     <section className="relative overflow-hidden" style={{ height: "60vh", minHeight: 360 }}>
       {project.videoUrl ? (
         <video
           src={project.videoUrl}
-          poster={image}
+          poster={poster}
           autoPlay
           muted
           loop
@@ -19,7 +22,7 @@ export default function TitleHero({ project }: { project: Project }) {
           className="absolute inset-0 w-full h-full object-cover"
         />
       ) : image ? (
-        <Image src={image} alt="" aria-hidden="true" fill priority sizes="100vw" className="object-cover" />
+        <Image src={image} alt="" aria-hidden="true" fill preload fetchPriority="high" sizes="100vw" className="object-cover" />
       ) : (
         <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #064e3b 0%, #10b981 100%)" }} />
       )}
