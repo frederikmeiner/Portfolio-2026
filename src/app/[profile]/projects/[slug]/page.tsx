@@ -20,14 +20,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { slug } = await params;
   const project = await getProject(slug);
   if (!project) return {};
-  const image = project.image?.asset?.url;
+  // Billedet til delekortet kommer fra opengraph-image.tsx ved siden af.
   return {
     title: project.title,
     description: project.description,
     openGraph: {
       title: project.title,
       description: project.description,
-      images: image ? [{ url: image }] : undefined,
     },
   };
 }

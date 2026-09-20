@@ -6,10 +6,10 @@
  */
 export type ProfileId = "developer" | "recruiter" | "family";
 
-export type PageId = "projects" | "skills" | "experience" | "inspiration" | "music" | "contact" | "wishlist";
+export type PageId = "projects" | "skills" | "experience" | "inspiration" | "music" | "contact" | "wishlist" | "behind";
 
 /** Navne, ikke komponenter — opslaget til lucide ligger i card-icons.ts. */
-export type IconName = "zap" | "rocket" | "briefcase" | "mail" | "music" | "lightbulb" | "gift";
+export type IconName = "zap" | "rocket" | "briefcase" | "mail" | "music" | "lightbulb" | "gift" | "code";
 
 export type CardSpec = {
   title: string;
@@ -51,9 +51,10 @@ const G = {
   spotify: "linear-gradient(135deg, #14532d 0%, #1db954 100%)",
   purple: "linear-gradient(135deg, #4a1d96 0%, #a855f7 100%)",
   pink: "linear-gradient(135deg, #831843 0%, #ec4899 100%)",
+  slate: "linear-gradient(135deg, #0f172a 0%, #475569 100%)",
 } as const;
 
-const ALL_PAGES: PageId[] = ["projects", "skills", "experience", "inspiration", "music", "contact", "wishlist"];
+const ALL_PAGES: PageId[] = ["projects", "skills", "experience", "inspiration", "music", "contact", "wishlist", "behind"];
 
 /**
  * Arbejdsrækkerne er ens for alle profiler — kun overskriften nævner profilen.
@@ -76,6 +77,7 @@ function workRows(label: string, withWishlistCase: boolean): RowSpec[] {
         cards: [
           { title: "Musik", description: "Hvad der spiller lige nu", page: "music", gradient: G.spotify, icon: "music" },
           { title: "Inspiration", description: "Hvad der driver mig", page: "inspiration", gradient: G.purple, icon: "lightbulb" },
+          { title: "Bag om siden", description: "Arkitektur, valg og fravalg — og en fejl jeg lærte af", page: "behind", gradient: G.slate, icon: "code" },
           ...(withWishlistCase
             ? [{ title: "Ønskelisten — som case", description: "Supabase, RLS der skjuler reservationer for ejeren, login med Google eller engangskode", href: "/family/wishlist", gradient: G.pink, icon: "gift" } satisfies CardSpec]
             : []),

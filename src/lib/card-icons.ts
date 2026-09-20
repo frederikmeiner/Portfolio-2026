@@ -1,4 +1,4 @@
-import { Briefcase, Gift, Lightbulb, Mail, Music, Rocket, Zap, type LucideIcon } from "lucide-react";
+import { Briefcase, Code, Gift, Lightbulb, Mail, Music, Rocket, Zap, type LucideIcon } from "lucide-react";
 import type { IconName } from "@/lib/profiles";
 
 /** profiles.ts kender kun navne, så den kan testes uden React — her bliver de til ikoner. */
@@ -10,4 +10,5 @@ export const CARD_ICONS: Record<IconName, LucideIcon> = {
   music: Music,
   lightbulb: Lightbulb,
   gift: Gift,
+  code: Code,
 };

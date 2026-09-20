@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Code, ExternalLink, Star } from "lucide-react";
 import SubPageLayout from "@/components/netflix/SubPageLayout";
 import TitleHero from "@/components/netflix/TitleHero";
+import TrackView from "@/components/netflix/TrackView";
 import ContentRow from "@/components/netflix/ContentRow";
 import ProjectCard from "@/components/cards/ProjectCard";
 import { relatedProjects } from "@/lib/related-projects";
@@ -30,6 +31,8 @@ export default function ProjectTitlePage({ profile, project, all }: Props) {
       trackTitle={project.title}
       trackImage={project.image?.asset?.url}
     >
+      <TrackView slug={project.slug.current} />
+
       {/* Meta-linje — som Netflix' "2024 · 3 sæsoner · HD" */}
       <ul
         className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-6 text-sm"

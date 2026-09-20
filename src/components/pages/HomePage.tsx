@@ -3,6 +3,7 @@ import HeroSection from "@/components/netflix/HeroSection";
 import FamilyHero from "@/components/netflix/FamilyHero";
 import ContentRow from "@/components/netflix/ContentRow";
 import ContinueWatchingRow from "@/components/netflix/ContinueWatchingRow";
+import TopTenRow from "@/components/netflix/TopTenRow";
 import CategoryCard from "@/components/cards/CategoryCard";
 import AnbefalingerCard from "@/components/cards/AnbefalingerCard";
 import CertificationsCard from "@/components/cards/CertificationsCard";
@@ -61,6 +62,7 @@ export default function HomePage({ profile }: { profile: ProfileId }) {
             <Row row={row} profile={profile} />
             {/* Besøgerens egen historik ligger lige under den første række, som på Netflix. */}
             {i === 0 && <ContinueWatchingRow profile={profile} />}
+            {i === 0 && <TopTenRow profile={profile} />}
           </div>
         ))}
       </div>
