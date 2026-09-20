@@ -176,6 +176,38 @@ const CASES = {
     ],
   },
 
+  "brdr-gamsgaard": {
+    role: "Udvikling — headless Next.js og WordPress",
+    facts: [
+      { label: "Arkitektur", value: "Headless" },
+      { label: "Frontend", value: "Next.js 16" },
+      { label: "Sektionstyper", value: "13" },
+      { label: "Opdatering uden deploy", value: "60 sek." },
+    ],
+    challenge:
+      "Tømrerfirmaet Brdr. Gamsgaard laver renovering, vinduer, tag og nybyggeri i Aarhus og omegn — og skifter vinduer med deres egen spider-kran, hvor andre kraner ikke kan komme til.\n\nEt håndværkersite skal føles som håndværket: video i fuld bredde, bevægelse og ro, og hurtigt på en telefon ude på en byggeplads. Det er svært at få ud af et klassisk WordPress-tema. Men firmaet skal stadig selv kunne rette tekster, billeder og projekter i et redigeringsværktøj, de kan finde ud af.",
+    solution:
+      "Løsningen er delt i to. Forrest kører en Next.js-app med App Router, TypeScript og Tailwind. Bagved ligger WordPress som rent CMS, og indholdet hentes gennem REST-API'et.\n\nSiderne bygges af 13 sektionstyper i ét fleksibelt ACF-felt — fra video der følger scroll til FAQ og projektoversigt. Redaktøren sætter blokke sammen i WordPress, og frontenden har en komponent pr. blok. Forsiden er statisk og regenereres hvert minut, så en rettelse er live uden deploy, og billederne leveres som AVIF fra WordPress' mediebibliotek gennem next/image.\n\nWordPress-installationen svarer selv med noindex, så det kun er det rigtige site, søgemaskinerne ser.",
+    highlights: [
+      "Headless arkitektur: Next.js 16 med App Router og React 19 foran, WordPress som CMS bagved via REST-API'et",
+      "13 sektionstyper i ét fleksibelt ACF-felt — redaktøren bygger sider af blokke, og frontenden har en komponent pr. blok",
+      "Statisk forside med regenerering hvert minut, så ændringer i WordPress er live uden deploy",
+      "Billeder fra WordPress' mediebibliotek leveret som AVIF gennem next/image",
+      "Sideovergange med Reacts View Transitions, smooth scroll med Lenis og animationer med Motion",
+      "Bevægelsen slås fra for dem, der har bedt om det, og siden har et skip-link",
+      "Projektoversigt med kolonner der folder sig ud, og en egen indholdstype til projekter",
+      "Video der følger scroll, og baggrundsklip med beskrivelse til skærmlæsere",
+      "Strukturerede data: GeneralContractor, et OfferCatalog med ni ydelser, FAQPage og BreadcrumbList",
+      "FAQ som tilgængelig accordion, selvhostede fonte via next/font og ét samlet stylesheet",
+      "WordPress-installationen svarer med noindex, så kun det rigtige site bliver indekseret",
+    ],
+    gallery: [
+      ["gamsgaard-9.jpg", "Projektoversigten — hvert projekt er sin egen indholdstype i WordPress."],
+      ["gamsgaard-2.jpg", "Spider-kranen: en serviceside bygget af de samme sektioner som resten."],
+      ["gamsgaard-6.jpg", "Forsidens sektioner, sat sammen af blokke i WordPress."],
+    ],
+  },
+
   "portfolio-2026": {
     role: "Idé, design og udvikling — eget projekt",
     facts: [
