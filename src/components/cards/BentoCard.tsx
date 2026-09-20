@@ -21,12 +21,6 @@ const gradientPool = [
   "linear-gradient(135deg, #713f12 0%, #ca8a04 100%)",
 ];
 
-function getSpans(size?: string) {
-  if (size === "large") return { col: 2, row: 2 };
-  if (size === "tall")  return { col: 1, row: 2 };
-  return { col: 1, row: 1 };
-}
-
 function getHostname(url?: string) {
   if (!url) return null;
   try {
@@ -38,7 +32,6 @@ function getHostname(url?: string) {
 
 export default function BentoCard({ item, index }: Props) {
   const gradient = gradientPool[index % gradientPool.length];
-  const { col, row } = getSpans(item.size);
   const isLarge = item.size === "large";
   const isBig = item.size === "large" || item.size === "tall";
   // Internt link (titel-side) vinder over det eksterne. Hostname vises kun for
@@ -59,6 +52,10 @@ export default function BentoCard({ item, index }: Props) {
       style={{ cursor: href ? "pointer" : "default" }}
       whileHover="hovered"
       initial="idle"
+      // Eksplicit hviletilstand: BentoGrid viser kortene gennem AnimatePresence med
+      // initial={false}, og uden denne sprang varianterne "idle" over — så stod
+      // hover-panelet med beskrivelsen fremme på alle kort.
+      animate="idle"
     >
       {/* Media */}
       <motion.div
@@ -166,7 +163,8 @@ export default function BentoCard({ item, index }: Props) {
     </motion.div>
   );
 
-  const span = { gridColumn: `span ${col}`, gridRow: `span ${row}`, display: "block" } as const;
+  // Pladsen i grid'et (span) sættes af BentoGrid, som også animerer den. Kortet fylder bare sin celle.
+  const span = { display: "block", width: "100%", height: "100%" } as const;
 
   if (internal) {
     return (
