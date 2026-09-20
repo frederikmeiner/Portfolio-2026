@@ -127,6 +127,18 @@ export default function WishlistGrid({
   const [pending, startTransition] = useTransition();
   const [reserved, setReserved] = useState(() => new Set(reservedIds));
   const [mine, setMine] = useState(() => new Set(myIds));
+
+  // useState læser kun props ved første render. Login med e-mailkode og hver
+  // reservation ender i router.refresh() uden reload — så serverens friske
+  // lister skal overtage her, ellers ser en nyindlogget gæst alt som ledigt.
+  const serverState = `${reservedIds.join()}|${myIds.join()}`;
+  const [synced, setSynced] = useState(serverState);
+  if (synced !== serverState) {
+    setSynced(serverState);
+    setReserved(new Set(reservedIds));
+    setMine(new Set(myIds));
+  }
+
   const [busyId, setBusyId] = useState<string | null>(null);
   const ownerCanSee = isOwner && !hideFromOwner;
   const [message, setMessage] = useState<string | null>(null);
