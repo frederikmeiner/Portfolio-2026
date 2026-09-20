@@ -6,7 +6,7 @@ Push til `main` deployer automatisk. Ikke andet.
 git push origin main
 ```
 
-GitHub Actions (`.github/workflows/deploy.yml`) SSH'er til VPS'en og kører deploy-scriptet. Det tager cirka to minutter. Følg med under repoets **Actions**-fane, eller:
+GitHub Actions (`.github/workflows/deploy.yml`) kører først jobbet `check` — lint, typer, unit-tests, build og en browser-test — og kun hvis det er grønt, SSH'er `deploy` til VPS'en og kører deploy-scriptet. Det tager cirka fem minutter i alt. Følg med under repoets **Actions**-fane, eller:
 
 ```bash
 gh run watch $(gh run list --workflow=Deploy --limit 1 --json databaseId -q '.[0].databaseId')
@@ -15,6 +15,23 @@ gh run watch $(gh run list --workflow=Deploy --limit 1 --json databaseId -q '.[0
 Skal du deploye uden en ny commit — fx efter en ændring på serveren — så tryk **Run workflow** under Actions, eller `gh workflow run Deploy --ref main`.
 
 **Indhold kræver ikke deploy.** Ønsker, projekter, skills og erfaringer ligger i Sanity og er live senest et minut efter de gemmes i Studio (siderne regenereres med `revalidate = 60` i `src/app/[profile]/layout.tsx`). Uden den værdi ville Next cache Sanity-svarene i `.next/cache` med et års levetid — og den mappe overlever deploys, så selv et nyt build viste gammelt indhold.
+
+## Tjekket før deploy
+
+Kør det samme lokalt, før du pusher:
+
+```bash
+npm run lint && npm run typecheck && npm test
+```
+
+Browser-testen (`e2e/`) logger ind på ønskelisten med engangskode mod en falsk Supabase (`e2e/mock-supabase.mjs`) og tjekker, at reservationerne vises uden genindlæsning. Den skal bruge et build lavet med mock-adressen, fordi `NEXT_PUBLIC_`-værdier bages ind ved build:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54999 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_e2e npm run build
+npm run test:e2e
+```
+
+Byg igen uden de to variabler bagefter, hvis du vil køre `npm start` lokalt mod den rigtige Supabase. Fejler testen i CI, ligger Playwright-sporet som artefakten `playwright-spor` på kørslen.
 
 ## Hvad der sker på serveren
 

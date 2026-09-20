@@ -46,3 +46,7 @@ next-env.d.ts
 # Python-cache fra skill-scripts
 __pycache__/
 *.pyc
+
+# playwright
+/test-results/
+/playwright-report/

@@ -1,4 +1,8 @@
-# Deployer til VPS'en ved push til main.
+# Tjekker koden og deployer til VPS'en ved push til main.
+#
+# Deploy kører kun, hvis "check" er grøn: lint, typer, unit-tests, build og en
+# browser-test af login på ønskelisten. Pull requests får samme tjek, men
+# deployer aldrig.
 #
 # Nøglen på serveren er låst til én forced command (se
 # /usr/local/sbin/deploy-portfolio-2026.sh), så dette workflow kan udelukkende
@@ -10,17 +14,55 @@ name: Deploy
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
-# To hurtige pushes deployer efter hinanden i stedet for at bygge oven i hinanden.
-concurrency:
-  group: deploy-production
-  cancel-in-progress: false
-
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Offentlige værdier — Sanity-datasættet kan læses uden nøgle, så build'et
+      # her behøver ingen secrets.
+      NEXT_PUBLIC_SANITY_PROJECT_ID: er2djct5
+      NEXT_PUBLIC_SANITY_DATASET: production
+      NEXT_PUBLIC_SANITY_API_VERSION: "2025-05-23"
+      # Browser-testen kører mod e2e/mock-supabase.mjs. NEXT_PUBLIC_-værdier bages
+      # ind ved build, så de skal stå her og ikke kun i testen. Dette build
+      # smides væk — serveren bygger sit eget med de rigtige værdier.
+      NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54999
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_e2e
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # Unit-testene kører .ts direkte med node --test, som kræver Node 24.
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Gem Playwright-spor ved fejl
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-spor
+          path: test-results/
+          retention-days: 7
+
   deploy:
+    needs: check
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # To hurtige pushes deployer efter hinanden i stedet for at bygge oven i hinanden.
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
     steps:
       - name: Deploy til VPS
         env:
