@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
+  // Engangsopsætning, der kun giver mening lokalt.
+  if (process.env.NODE_ENV === "production") return new NextResponse(null, { status: 404 });
+
   const code = req.nextUrl.searchParams.get("code");
   if (!code) return NextResponse.json({ error: "No code" }, { status: 400 });
 
@@ -21,7 +24,13 @@ export async function GET(req: NextRequest) {
     }),
   });
 
-  const data = await res.json();
+  const data = await res.json().catch(() => null);
+  if (!res.ok || !data?.refresh_token) {
+    return NextResponse.json(
+      { error: "Spotify afviste koden", details: data?.error_description ?? null },
+      { status: 502 }
+    );
+  }
 
   // Vis refresh token så det kan kopieres til .env.local
   return new NextResponse(

@@ -1,36 +1,25 @@
-import { getNowPlaying, getRecentlyPlayed } from "@/lib/spotify";
+import { getNowPlaying, getRecentlyPlayed, type SpotifyTrack } from "@/lib/spotify";
 
-export const revalidate = 0;
+export const dynamic = "force-dynamic";
+
+function toJson(track: SpotifyTrack, isPlaying: boolean) {
+  return Response.json({
+    isPlaying,
+    title: track.name,
+    artist: track.artists.map((a) => a.name).join(", "),
+    album: track.album.name,
+    albumArt: track.album.images[0]?.url,
+    songUrl: track.external_urls.spotify,
+  });
+}
 
 export async function GET() {
-  const res = await getNowPlaying();
+  const song = await getNowPlaying();
+  if (song?.item) return toJson(song.item, song.is_playing);
 
-  if (res.status === 204 || res.status > 400) {
-    // Ikke noget i gang — vis sidst afspillede
-    const recentRes = await getRecentlyPlayed(1);
-    if (!recentRes.ok) return Response.json({ isPlaying: false });
-    const recent = await recentRes.json();
-    const track = recent.items?.[0]?.track;
-    if (!track) return Response.json({ isPlaying: false });
-    return Response.json({
-      isPlaying: false,
-      title: track.name,
-      artist: track.artists.map((a: { name: string }) => a.name).join(", "),
-      album: track.album.name,
-      albumArt: track.album.images[0]?.url,
-      songUrl: track.external_urls.spotify,
-    });
-  }
-
-  const song = await res.json();
-  if (!song?.item) return Response.json({ isPlaying: false });
-
-  return Response.json({
-    isPlaying: song.is_playing,
-    title: song.item.name,
-    artist: song.item.artists.map((a: { name: string }) => a.name).join(", "),
-    album: song.item.album.name,
-    albumArt: song.item.album.images[0]?.url,
-    songUrl: song.item.external_urls.spotify,
-  });
+  // Intet nummer i gang — heller ikke ved podcast, reklame eller fejl hos
+  // Spotify — så vis det sidst afspillede.
+  const recent = await getRecentlyPlayed(1);
+  const track = recent?.items?.[0]?.track;
+  return track ? toJson(track, false) : Response.json({ isPlaying: false });
 }

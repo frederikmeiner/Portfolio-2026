@@ -16,11 +16,21 @@ type Track = {
 
 export default function SpotifyPlayer() {
   const [track, setTrack] = useState<Track | null>(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     async function fetchNowPlaying() {
-      const res = await fetch("/api/spotify/now-playing");
-      if (res.ok) setTrack(await res.json());
+      try {
+        const res = await fetch("/api/spotify/now-playing");
+        const data = res.ok ? await res.json() : null;
+        // Uden titel har Spotify intet nummer at vise. Behold det forrige i
+        // stedet for at tegne et tomt kort.
+        if (data?.title) setTrack(data);
+      } catch {
+        // Netværksfejl — næste poll prøver igen.
+      } finally {
+        setLoaded(true);
+      }
     }
     fetchNowPlaying();
     const interval = setInterval(fetchNowPlaying, 30000);
@@ -106,7 +116,7 @@ export default function SpotifyPlayer() {
             style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}
           >
             <p className="text-sm" style={{ color: "var(--muted)", fontFamily: "var(--font-body)" }}>
-              Henter Spotify data...
+              {loaded ? "Spotify svarer ikke lige nu." : "Henter Spotify data..."}
             </p>
           </motion.div>
         )}

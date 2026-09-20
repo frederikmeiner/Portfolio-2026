@@ -1,19 +1,11 @@
 import { getTopArtists } from "@/lib/spotify";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const res = await getTopArtists(8);
-  if (!res.ok) return Response.json({ artists: [] });
-  const data = await res.json();
+  const data = await getTopArtists(8);
 
-  const artists = data.items?.map((artist: {
-    name: string;
-    images: { url: string }[];
-    external_urls: { spotify: string };
-    genres: string[];
-    followers: { total: number };
-  }) => ({
+  const artists = (data?.items ?? []).map((artist) => ({
     name: artist.name,
     image: artist.images[0]?.url,
     url: artist.external_urls.spotify,
@@ -21,5 +13,5 @@ export async function GET() {
     followers: artist.followers?.total ?? 0,
   }));
 
-  return Response.json({ artists: artists ?? [] });
+  return Response.json({ artists });
 }

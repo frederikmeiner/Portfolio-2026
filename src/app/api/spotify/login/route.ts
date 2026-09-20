@@ -7,6 +7,9 @@ const scopes = [
 ].join(" ");
 
 export function GET() {
+  // Engangsopsætning, der kun giver mening lokalt — redirect_uri peger på 127.0.0.1.
+  if (process.env.NODE_ENV === "production") return new NextResponse(null, { status: 404 });
+
   const params = new URLSearchParams({
     client_id: process.env.SPOTIFY_CLIENT_ID!,
     response_type: "code",
