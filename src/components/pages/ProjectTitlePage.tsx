@@ -7,6 +7,7 @@ import ContentRow from "@/components/netflix/ContentRow";
 import ProjectCard from "@/components/cards/ProjectCard";
 import { relatedProjects } from "@/lib/related-projects";
 import { PROFILES, type ProfileId } from "@/lib/profiles";
+import { techSlug } from "@/lib/tech-slug";
 import type { Project } from "@/lib/sanity/queries";
 
 type Props = { profile: ProfileId; project: Project; all: Project[] };
@@ -100,7 +101,8 @@ export default function ProjectTitlePage({ profile, project, all }: Props) {
             {tech.map((t) => (
               <Link
                 key={t._id}
-                href={`${PROFILES[profile].href}/skills`}
+                // Til de andre projekter med samme teknologi — ikke bare til listen over kompetencer.
+                href={`${base}?tech=${techSlug(t.name)}`}
                 className="rounded-full px-3 py-1.5 text-xs font-medium transition-opacity hover:opacity-70"
                 style={{
                   background: "var(--surface-2)",

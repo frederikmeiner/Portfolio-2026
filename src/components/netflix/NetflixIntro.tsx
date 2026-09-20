@@ -50,7 +50,8 @@ export default function NetflixIntro({ onComplete }: { onComplete: () => void })
           <motion.p
             key="prompt"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.4 }}
+            // 0.6 og ikke lavere: hvid på sort skal over 4.5:1 i kontrast (0.4 gav ca. 3.7:1).
+            animate={{ opacity: 0.6 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6 }}
             className="text-white text-sm tracking-widest uppercase select-none"

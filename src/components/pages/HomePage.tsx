@@ -4,6 +4,8 @@ import FamilyHero from "@/components/netflix/FamilyHero";
 import ContentRow from "@/components/netflix/ContentRow";
 import ContinueWatchingRow from "@/components/netflix/ContinueWatchingRow";
 import TopTenRow from "@/components/netflix/TopTenRow";
+import BecauseYouWatchedRow from "@/components/netflix/BecauseYouWatchedRow";
+import { getProjects } from "@/lib/sanity/queries";
 import CategoryCard from "@/components/cards/CategoryCard";
 import AnbefalingerCard from "@/components/cards/AnbefalingerCard";
 import CertificationsCard from "@/components/cards/CertificationsCard";
@@ -44,8 +46,13 @@ function Row({ row, profile }: { row: RowSpec; profile: ProfileId }) {
 }
 
 /** Forsiden for enhver profil — hvad den viser står i profiles.ts, ikke her. */
-export default function HomePage({ profile }: { profile: ProfileId }) {
+export default async function HomePage({ profile }: { profile: ProfileId }) {
   const { label, heroMedia, home } = PROFILES[profile];
+  // Hentes én gang og deles af de rækker, der viser projekter.
+  const projects = await getProjects();
+  // Rækken regnes ud i browseren, så listen sendes med siden — uden beskrivelserne,
+  // som kortene ikke viser, og som er det meste af vægten.
+  const cardProjects = projects.map((project) => ({ ...project, description: undefined }));
 
   return (
     <div style={{ background: "var(--background)", minHeight: "100vh" }}>
@@ -62,7 +69,8 @@ export default function HomePage({ profile }: { profile: ProfileId }) {
             <Row row={row} profile={profile} />
             {/* Besøgerens egen historik ligger lige under den første række, som på Netflix. */}
             {i === 0 && <ContinueWatchingRow profile={profile} />}
-            {i === 0 && <TopTenRow profile={profile} />}
+            {i === 0 && <BecauseYouWatchedRow profile={profile} projects={cardProjects} />}
+            {i === 0 && <TopTenRow profile={profile} projects={projects} />}
           </div>
         ))}
       </div>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
+import InViewVideo from "@/components/cards/InViewVideo";
 import type { BentoItem } from "@/lib/sanity/queries";
 
 type Props = { item: BentoItem; index: number };
@@ -48,6 +49,9 @@ export default function BentoCard({ item, index }: Props) {
   const hostname = getHostname(external);
 
   const imageUrl = item.image?.asset?.url ?? null;
+  // <video poster> går uden om next/image, så Sanity skalerer selv — ellers
+  // hentes originalen i fuld størrelse bare for at ligge bag et klip.
+  const posterUrl = imageUrl?.startsWith("https://cdn.sanity.io/") ? `${imageUrl}?w=1000&auto=format` : imageUrl;
 
   const card = (
     <motion.div
@@ -64,16 +68,11 @@ export default function BentoCard({ item, index }: Props) {
       >
         {item.videoUrl ? (
           // Video vinder over billedet. Screenshottet bruges som poster,
-          // så kortet ikke står sort mens videoen loader.
-          <video
-            src={item.videoUrl}
-            poster={imageUrl ?? undefined}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-          />
+          // så kortet ikke står sort mens videoen loader. Uden billede står
+          // kortets gradient bag, indtil klippet er hentet.
+          <div className="w-full h-full" style={{ background: imageUrl ? undefined : gradient }}>
+            <InViewVideo src={item.videoUrl} poster={posterUrl ?? undefined} className="w-full h-full object-cover" />
+          </div>
         ) : imageUrl ? (
           <Image
             src={imageUrl}

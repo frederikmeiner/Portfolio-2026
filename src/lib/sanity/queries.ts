@@ -1,3 +1,4 @@
+import { techSlug } from "@/lib/tech-slug";
 import { client } from "@/sanity/client";
 
 export type Skill = {
@@ -27,6 +28,8 @@ export type BentoItem = {
   /** Internt link (titel-side). Sat → kortet linker hertil i stedet for liveUrl. */
   href?: string;
   size?: BentoSize;
+  /** Teknologi-nøgler (techSlug) til filteret på projektoversigten. */
+  tags?: string[];
 };
 
 export type Project = {
@@ -140,6 +143,7 @@ export function projectsToBento(projects: Project[], basePath?: string): BentoIt
     liveUrl: p.liveUrl,
     href: basePath && p.slug?.current ? `${basePath}/${p.slug.current}` : undefined,
     size: p.size ?? (p.featured ? "large" : "normal"),
+    tags: (p.technologies ?? []).map((t) => techSlug(t.name)),
   }));
 }
 

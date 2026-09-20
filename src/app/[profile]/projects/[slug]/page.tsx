@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProjectTitlePage from "@/components/pages/ProjectTitlePage";
 import { getProject, getProjects, getProjectSlugs } from "@/lib/sanity/queries";
-import { hasPage, isProfileId, profilesWithPage } from "@/lib/profiles";
+import { PROFILES, hasPage, isProfileId, profilesWithPage } from "@/lib/profiles";
+import JsonLd from "@/components/JsonLd";
+
+const SITE_URL = "https://frederikmeiner.com";
 
 type Params = Promise<{ profile: string; slug: string }>;
 
@@ -35,5 +38,27 @@ export default async function Page({ params }: { params: Params }) {
   const { profile, slug } = await params;
   const [project, all] = await Promise.all([getProject(slug), getProjects()]);
   if (!project || !isProfileId(profile) || !hasPage(profile, "projects")) notFound();
-  return <ProjectTitlePage profile={profile} project={project} all={all} />;
+  const url = `${SITE_URL}${PROFILES[profile].href}/projects/${project.slug.current}`;
+
+  return (
+    <>
+      <ProjectTitlePage profile={profile} project={project} all={all} />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          name: project.title,
+          description: project.description,
+          url,
+          image: project.image?.asset?.url,
+          datePublished: project.publishedAt,
+          keywords: project.technologies?.map((t) => t.name).join(", "),
+          // Selve sitet, når projektet er live et andet sted.
+          sameAs: project.liveUrl,
+          inLanguage: "da-DK",
+          creator: { "@id": `${SITE_URL}/#frederik` },
+        }}
+      />
+    </>
+  );
 }

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import type { Skill } from "@/lib/sanity/queries";
 
 const categoryColors: Record<string, string> = {
@@ -14,14 +15,17 @@ const categoryColors: Record<string, string> = {
   Andet:    "#6b7280",
 };
 
-export default function SkillCard({ skill }: { skill: Skill }) {
-  const color = categoryColors[skill.category] ?? "#6b7280";
+type Props = { skill: Skill; projectCount?: number; projectsHref?: string };
 
-  return (
+export default function SkillCard({ skill, projectCount = 0, projectsHref }: Props) {
+  const color = categoryColors[skill.category] ?? "#6b7280";
+  const linked = projectCount > 0 && projectsHref;
+
+  const card = (
     <motion.div
       whileHover={{ scale: 1.06 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="flex-shrink-0 rounded-xl overflow-hidden flex flex-col items-center cursor-default"
+      className={`flex-shrink-0 rounded-xl overflow-hidden flex flex-col items-center h-full ${linked ? "cursor-pointer" : "cursor-default"}`}
       style={{
         width: 128,
         background: "var(--surface-2)",
@@ -79,7 +83,21 @@ export default function SkillCard({ skill }: { skill: Skill }) {
             {skill.category}
           </span>
         </div>
+
+        {linked && (
+          <span className="text-xs font-medium" style={{ color: "var(--accent)", fontFamily: "var(--font-body)" }}>
+            {projectCount} {projectCount === 1 ? "projekt" : "projekter"} →
+          </span>
+        )}
       </div>
     </motion.div>
+  );
+
+  return linked ? (
+    <Link href={projectsHref} aria-label={`${skill.name}: se ${projectCount} ${projectCount === 1 ? "projekt" : "projekter"}`}>
+      {card}
+    </Link>
+  ) : (
+    card
   );
 }

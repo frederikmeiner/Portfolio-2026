@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import JsonLd from "@/components/JsonLd";
 
 /**
  * Fontene selvhostes af Next i stedet for at hentes fra Google ved runtime.
@@ -72,13 +73,40 @@ const themeScript = `
 })();
 `;
 
+/** Hvem siden handler om — det Google viser, når nogen søger på navnet. */
+const PERSON = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": `${SITE_URL}/#frederik`,
+  name: "Frederik Meiner",
+  jobTitle: "Senior frontend-udvikler",
+  url: SITE_URL,
+  image: `${SITE_URL}/Frederik-portraet.jpg`,
+  sameAs: ["https://linkedin.com/in/frederikmeiner"],
+  knowsAbout: ["Next.js", "React", "TypeScript", "WordPress", "Frontend-udvikling"],
+};
+
+const WEBSITE = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE_URL}/#website`,
+  url: SITE_URL,
+  name: "Frederik Meiner",
+  inLanguage: "da-DK",
+  author: { "@id": `${SITE_URL}/#frederik` },
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="da" className={`${archivo.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <JsonLd data={PERSON} />
+        <JsonLd data={WEBSITE} />
+      </body>
     </html>
   );
 }

@@ -1,12 +1,12 @@
 import ContentRow from "@/components/netflix/ContentRow";
 import ProjectCard from "@/components/cards/ProjectCard";
-import { getProjects } from "@/lib/sanity/queries";
+import type { Project } from "@/lib/sanity/queries";
 import { getTopProjects } from "@/lib/project-views";
 import { PROFILES, type ProfileId } from "@/lib/profiles";
 
 /** Netflix' Top 10 med de store tal — rangeret efter hvor meget projekterne faktisk bliver set. */
-export default async function TopTenRow({ profile }: { profile: ProfileId }) {
-  const { projects, ranked } = await getTopProjects(await getProjects());
+export default async function TopTenRow({ profile, projects: all }: { profile: ProfileId; projects: Project[] }) {
+  const { projects, ranked } = await getTopProjects(all);
   if (projects.length === 0) return null;
 
   const base = `${PROFILES[profile].href}/projects`;
