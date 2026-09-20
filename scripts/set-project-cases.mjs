@@ -176,6 +176,41 @@ const CASES = {
     ],
   },
 
+  "portfolio-2026": {
+    role: "Idé, design og udvikling — eget projekt",
+    facts: [
+      { label: "Profiler", value: "3" },
+      { label: "Projekter fra Sanity", value: "29" },
+      { label: "Tests før hvert deploy", value: "20" },
+      { label: "Fra push til live", value: "5 min" },
+    ],
+    challenge:
+      "Et portfolio siger det samme som alle andre portfolioer: her er mine projekter, her er mine kompetencer. Jeg ville have et, der viser, hvordan jeg arbejder, i stedet for at fortælle det — og som en rekrutterer, en udvikler og min familie hver især gider blive på.\n\nDet gav tre krav. Indholdet skal kunne rettes uden at røre koden. Siden skal føles som et produkt, ikke som en skabelon. Og den skulle rumme mindst én ting, der er svær på rigtigt: en ønskeliste, hvor gæster reserverer gaver — og hvor jeg selv ikke må kunne se, hvad der er taget.",
+    solution:
+      "Sitet er bygget som en streamingtjeneste i Next.js 16 med TypeScript og Tailwind. Man vælger profil, og forsiden, rækkerne og tonen følger med. Alt om profilerne står i én fil, som ruter, navigation, sitemap og forsider læser fra, så en ny profil er én post. Projekter, erfaring og kompetencer ligger i Sanity, og siderne regenereres hvert minut, så nyt indhold er live uden deploy.\n\nØnskelisten kører på Supabase. Row Level Security sørger for, at man kun kan læse sine egne reservationer, og hvilke ønsker der er taget, udleveres af én databasefunktion — som svarer med en tom liste, når det er mig, der spørger. Det er spærret i databasen, ikke bare skjult i brugerfladen.\n\nForan hvert deploy står en port: lint, typetjek, unit-tests, build og en browser-test, der logger ind på ønskelisten mod en falsk Supabase. Er den rød, går intet live.",
+    highlights: [
+      "Tre profiler styret fra én konfigurationsfil — ruter, navigation, sitemap og forsider læser samme sted, og reglerne er dækket af tests",
+      "Netflix-mekanikken bygget rigtigt: \"Fortsæt hvor du slap\" med fremdrift, \"Fordi du så …\" ud fra fælles teknologier, og Top 10 rangeret efter faktiske visninger",
+      "Historikken ligger i localStorage, men læses gennem useSyncExternalStore, så server og klient er enige — ingen hydration-fejl",
+      "Forhåndsvisning på kort: klippet hentes først efter 600 ms hover, og på projektoversigten afspilles klip kun, mens de er på skærmen",
+      "Projektoversigt med teknologi-filter i adressen, hvor kortene glider på plads i stedet for at hoppe",
+      "Case-sider drevet af valgfri felter i Sanity — uden dem ser et projekt ud som før",
+      "Ønskeliste med login via Google eller engangskode, reservationer beskyttet af Row Level Security, og visninger talt gennem en databasefunktion som eneste vej ind til tabellen",
+      "Delekort genereret pr. projekt, strukturerede data og en canonical pr. side",
+      "Spotify \"spiller nu\", med token og svar husket i serverprocessen i stedet for i en cache, der aldrig ramte",
+      "CI foran deploy: lint, typer, 18 unit-tests, build og to browser-tests med Playwright — browser-testen bliver rød, hvis login-rettelsen fjernes",
+      "Deploy til egen VPS via GitHub Actions, hvor SSH-nøglen er låst til ét script og ikke kan give shell på maskinen",
+      "Tilgængelighed taget alvorligt: introen kan startes fra tastaturet, kontrasten består kravene, og bevægelse slås fra for dem, der har bedt om det",
+    ],
+    gallery: [
+      ["portfolio-2.jpg", "Forsiden: \"Fortsæt hvor du slap\", \"Fordi du så …\" og Top 10 efter faktiske visninger."],
+      ["portfolio-1.jpg", "Profilvælgeren — samme indhold, tre indgange."],
+      ["portfolio-3.jpg", "Projektoversigten filtreret på en teknologi."],
+      ["portfolio-4.jpg", "Ønskelisten: reservationer er skjult for ejeren i selve databasen."],
+      ["portfolio-5.jpg", "En case-side, drevet af felter i Sanity."],
+    ],
+  },
+
   caolin: {
     role: "Udvikling fra bunden — WordPress og Breakdance",
     facts: [
