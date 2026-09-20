@@ -56,7 +56,8 @@ const TAGS = {
   turnpikes: [...WP],
   "mollerup-golf-club": ["woocommerce", "elementor", ...WP],
   ownersclub: ["woocommerce", "elementor", ...WP],
-  geovent: ["elementor", ...WP],
+  geovent: ["elementor", "elasticpress", ...WP],
+  "portfolio-2026": ["nextjs", "react", "typescript", "tailwind", "sanity", "supabase", "cicd"],
   "sculpture-by": ["elementor", "multisite", ...WP],
 };
 

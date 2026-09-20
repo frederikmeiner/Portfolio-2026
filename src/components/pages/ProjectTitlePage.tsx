@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Code, ExternalLink, Star } from "lucide-react";
+import { BookOpen, Code, ExternalLink, Star } from "lucide-react";
 import SubPageLayout from "@/components/netflix/SubPageLayout";
 import TitleHero from "@/components/netflix/TitleHero";
 import TrackView from "@/components/netflix/TrackView";
@@ -21,6 +21,9 @@ export default function ProjectTitlePage({ profile, project, all }: Props) {
   const year = project.publishedAt ? new Date(project.publishedAt).getFullYear() : null;
   const tech = project.technologies ?? [];
   const related = relatedProjects(project, all);
+  // Portfolioet er selv et projekt. "Åbn" ville bare føre til det site man står
+  // på — der er historien bag mere værd end linket.
+  const isThisSite = project.liveUrl?.startsWith("https://frederikmeiner.com") ?? false;
 
   return (
     <SubPageLayout
@@ -51,7 +54,16 @@ export default function ProjectTitlePage({ profile, project, all }: Props) {
       </ul>
 
       <div className="flex flex-wrap gap-3 mb-8">
-        {project.liveUrl && (
+        {isThisSite && (
+          <Link
+            href={`${PROFILES[profile].href}/behind`}
+            className={button}
+            style={{ background: "var(--foreground)", color: "var(--background)", fontFamily: "var(--font-body)" }}
+          >
+            <BookOpen size={16} /> Bag om siden
+          </Link>
+        )}
+        {project.liveUrl && !isThisSite && (
           <a
             href={project.liveUrl}
             target="_blank"
