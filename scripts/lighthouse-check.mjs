@@ -13,8 +13,9 @@
  *    den blev målt — landmærker, kontrast og aria-labels skrider stille.
  *  - Sidevægt har et loft pr. side. Også deterministisk, og det fanger den dyre
  *    fejl: at alle klip igen hentes på én gang.
- *  - Ydelse svinger med maskinen (en CI-runner er langsom og ujævn), så den
- *    fejler kun ved et reelt sammenbrud og advarer ellers.
+ *  - Ydelse fejler ALDRIG et build, den advarer kun. Tallet svinger med maskinen:
+ *    samme commit gav 91 lokalt og 55 på GitHubs runner. En grænse ville blokere
+ *    deploys uden grund. De to ting ovenfor fanger de regressioner, der betyder noget.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
@@ -31,7 +32,6 @@ const PAGES = [
   { path: "/developer/projects/kompositterrasse", maxKB: 1200 },
   { path: "/developer/skills", maxKB: 900 },
 ];
-const PERF_FAIL = 50;
 const PERF_WARN = 85;
 
 const out = mkdtempSync(join(tmpdir(), "lh-"));
@@ -62,8 +62,7 @@ for (const { path, maxKB } of PAGES) {
     failures.push(`${path}: tilgængelighed ${a11y} (${failing.join(", ")})`);
   }
   if (kb > maxKB) failures.push(`${path}: ${kb} KB er over loftet på ${maxKB} KB`);
-  if (perf < PERF_FAIL) failures.push(`${path}: ydelse ${perf} er under ${PERF_FAIL}`);
-  else if (perf < PERF_WARN) warnings.push(`${path}: ydelse ${perf} (under ${PERF_WARN} — kan være maskinen)`);
+  if (perf < PERF_WARN) warnings.push(`${path}: ydelse ${perf} (under ${PERF_WARN} — kan være maskinen)`);
 }
 
 rmSync(out, { recursive: true, force: true });
