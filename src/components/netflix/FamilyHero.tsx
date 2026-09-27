@@ -9,8 +9,14 @@ type Props = { media: string };
 
 /** Forsiden for familie og venner: ønskelisten er hovedpersonen, ikke CV'et. */
 export default function FamilyHero({ media }: Props) {
+  // min-height i stedet for fast højde: på mobil er indholdet højere end
+  // 70vh, og med fast højde blev toppen (profil-labelen) klippet og skubbet
+  // op under den faste header. Toppadding holder indholdet fri af den.
   return (
-    <section className="relative flex items-center overflow-hidden" style={{ height: "70vh" }}>
+    <section
+      className="relative flex items-center overflow-hidden pt-28 pb-12 md:pb-8"
+      style={{ minHeight: "70vh" }}
+    >
       <HeroBackdrop media={media} />
 
       <div className="relative z-10 px-5 md:px-16 lg:px-24 max-w-4xl">

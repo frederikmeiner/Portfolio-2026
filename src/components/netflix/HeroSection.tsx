@@ -17,8 +17,14 @@ type Props = {
 export default function HeroSection({ profileLabel, media = "hero-developer" }: Props) {
   const years = yearsOfExperience();
 
+  // min-height i stedet for fast højde: på mobil er indholdet højere end
+  // 70vh, og med fast højde blev toppen (profil-labelen) klippet og skubbet
+  // op under den faste header. Toppadding holder indholdet fri af den.
   return (
-    <section className="relative flex items-center overflow-hidden" style={{ height: "70vh" }}>
+    <section
+      className="relative flex items-center overflow-hidden pt-28 pb-12 md:pb-8"
+      style={{ minHeight: "70vh" }}
+    >
       {/* Baggrundsklip. Lå før som en GIF hostet hos Giphy — nu selvhostet
           video, hvilket både fjerner tredjepartsafhængigheden og skærer
           filstørrelsen markant. Plakatbilledet males med det samme, så
