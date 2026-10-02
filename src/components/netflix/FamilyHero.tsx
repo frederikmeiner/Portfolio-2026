@@ -47,8 +47,7 @@ export default function FamilyHero({ media }: Props) {
           className="text-lg md:text-xl font-light max-w-xl mb-10 leading-relaxed"
           style={{ color: "var(--on-media-muted)", fontFamily: "var(--font-body)" }}
         >
-          Reservér et ønske, så I ikke køber det samme. Jeg kan ikke se, hvem der har
-          taget hvad — kun at det er taget. Log ind med Google eller få en kode på mail.
+          Reservér et ønske, så I ikke køber det samme. Jeg kan ikke se, hvad I reserverer — det er spærret i databasen, ikke bare skjult. Log ind med Google eller få en kode på mail.
         </motion.p>
 
         <motion.div
