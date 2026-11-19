@@ -1,0 +1,38 @@
+# Holder Supabase-projektet bag ønskelisten vågent.
+#
+# Gratis-planen pauser et projekt efter 7 dage uden databaseaktivitet. Så
+# forsvinder DNS'en for <ref>.supabase.co, og Google-login/OTP på ønskelisten
+# ender i "serveren blev ikke fundet". Et kald til REST-API'et to gange om ugen
+# rammer Postgres og nulstiller uret.
+#
+# Nøglen er den publishable nøgle, som i forvejen ligger i browser-bundlet.
+# RLS gør, at forespørgslen returnerer [] — det er nok til at tælle som aktivitet.
+#
+# GitHub slår planlagte workflows fra i offentlige repoer efter 60 dage uden
+# aktivitet. Det sidste trin genaktiverer derfor workflowet selv via API'et ved
+# hver kørsel, hvilket nulstiller den tæller — så ingen dummy-commits.
+name: Supabase keep-alive
+
+on:
+  schedule:
+    - cron: "17 6 * * 1,4"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    steps:
+      - name: Ping database via REST
+        env:
+          SUPABASE_URL: https://fpvkzsnofaaunhnpoyxa.supabase.co
+          SUPABASE_KEY: sb_publishable_PwZOD_YvCZaaXwtRCgzlHg_Fi8x7Fb0
+        run: |
+          curl --fail-with-body -sS -H "apikey: $SUPABASE_KEY" "$SUPABASE_URL/rest/v1/reservations?select=id&limit=1"
+
+      - name: Hold selve workflowet aktivt (60-dages-reglen)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/supabase-keepalive.yml/enable"
