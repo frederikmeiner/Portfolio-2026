@@ -2,7 +2,9 @@ import SubPageLayout from "@/components/netflix/SubPageLayout";
 import WishlistGrid from "@/components/cards/WishlistGrid";
 import { getWishlist } from "@/lib/sanity/queries";
 import { createServerSupabase, isSupabaseConfigured } from "@/lib/supabase/server";
+import Snowfall from "@/components/christmas/Snowfall";
 import { PROFILES, type ProfileId } from "@/lib/profiles";
+import { christmasCountdown, isChristmasSeason } from "@/lib/season";
 
 type Props = { profile: ProfileId; loginFailed?: boolean };
 
@@ -10,6 +12,8 @@ export default async function WishlistPage({ profile, loginFailed = false }: Pro
   const items = await getWishlist();
   const { href, label } = PROFILES[profile];
   const authReady = isSupabaseConfigured();
+  const christmas = isChristmasSeason();
+  const countdown = christmas ? christmasCountdown() : null;
 
   let user: { id: string; name: string } | null = null;
   let isOwner = false;
@@ -46,8 +50,12 @@ export default async function WishlistPage({ profile, loginFailed = false }: Pro
   }
 
   return (
-    <SubPageLayout title="Ønskeliste" backHref={href} backLabel={label} maxWidth="1320px">
+    <div className={christmas ? "theme-christmas" : undefined}>
+    {christmas && <Snowfall />}
+    <SubPageLayout title={christmas ? "Juleønsker" : "Ønskeliste"} trackTitle="Ønskeliste" backHref={href} backLabel={label} maxWidth="1320px">
       <WishlistGrid
+        christmas={christmas}
+        countdown={countdown}
         items={items}
         authReady={authReady}
         user={user}
@@ -58,5 +66,6 @@ export default async function WishlistPage({ profile, loginFailed = false }: Pro
         loginFailed={loginFailed}
       />
     </SubPageLayout>
+    </div>
   );
 }

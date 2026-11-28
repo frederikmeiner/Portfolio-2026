@@ -131,3 +131,69 @@ h1, h2, h3, h4, h5, h6 {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Julesæson på familie-profilen (se src/lib/season.ts). Accenten bliver
+   julerød i stedet for blå; tekstvarianterne holder 4.5:1 i begge temaer. */
+.theme-christmas {
+  --accent: #c8102e;
+  --accent-hover: #a50d26;
+  --accent-text: #f87171;
+}
+:root[data-theme="light"] .theme-christmas {
+  --accent-text: #b91c1c;
+}
+
+.snowfall {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  overflow: hidden;
+}
+.snowfall span {
+  position: absolute;
+  top: -12px;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+  animation-name: snow-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+/* I lyst tema er hvid sne usynlig på lys baggrund — giv den en blålig tone. */
+:root[data-theme="light"] .snowfall span {
+  background: #bfd3ea;
+  box-shadow: none;
+}
+@keyframes snow-fall {
+  to {
+    transform: translate3d(var(--drift, 0), 105vh, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .snowfall {
+    display: none;
+  }
+}
+
+/* Juleband øverst på hvert ønskekort — stribet som en polkagris. */
+.xmas-ribbon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  height: 5px;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    135deg,
+    #c8102e 0px,
+    #c8102e 8px,
+    #ffffff 8px,
+    #ffffff 12px,
+    #15803d 12px,
+    #15803d 20px,
+    #ffffff 20px,
+    #ffffff 24px
+  );
+}

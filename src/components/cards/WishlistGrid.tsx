@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Gift, Check, LogOut, Undo2, ShieldCheck, Eye, Mail, Tag, Copy } from "lucide-react";
+import { ExternalLink, Gift, Check, LogOut, Undo2, ShieldCheck, Eye, Mail, Tag, Copy, Snowflake } from "lucide-react";
 import { getBrowserSupabase } from "@/lib/supabase/client";
 import EmailSignIn from "@/components/cards/EmailSignIn";
 import type { Wish } from "@/lib/sanity/queries";
@@ -24,6 +24,9 @@ type Props = {
   hideFromOwner?: boolean;
   reservedIds?: string[];
   myIds?: string[];
+  /** Julesæson: nedtælling, julebånd på kortene og julerøde knapper. */
+  christmas?: boolean;
+  countdown?: string | null;
 };
 
 function getHostname(url?: string) {
@@ -125,6 +128,8 @@ export default function WishlistGrid({
   reservedIds = [],
   myIds = [],
   loginFailed = false,
+  christmas = false,
+  countdown = null,
 }: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -242,6 +247,19 @@ export default function WishlistGrid({
 
   return (
     <div>
+      {christmas && (
+        <div
+          className="mb-7 flex items-center gap-3 text-sm font-semibold"
+          style={{ color: "var(--accent-text)", fontFamily: "var(--font-body)" }}
+        >
+          <Snowflake size={18} aria-hidden="true" />
+          <span>{countdown ?? "Glædelig jul"}</span>
+          <span className="hidden sm:inline" style={{ color: "var(--muted)", fontWeight: 400 }}>
+            — reservér en gave, så den ikke ligger under træet to gange.
+          </span>
+        </div>
+      )}
+
       {/* Privatliv + login — én linje, ikke en plakat */}
       {authReady && (
         <div
@@ -405,6 +423,7 @@ export default function WishlistGrid({
                   ligger som søskende til linket, så knappen ikke ender inde i
                   et <a>. */}
               <div className="relative">
+                {christmas && <span aria-hidden="true" className="xmas-ribbon" />}
                 {item.discountCode && <DiscountBadge code={item.discountCode} />}
                 <a
                 href={item.url ?? undefined}
@@ -559,7 +578,7 @@ export default function WishlistGrid({
                         }}
                       >
                         <Gift size={14} />
-                        Reservér
+                        {christmas ? "Reservér julegaven" : "Reservér"}
                       </button>
                     ))}
                 </div>
